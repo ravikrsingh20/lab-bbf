@@ -1,0 +1,5 @@
+Step1 : Install spring toolsuite from below link
+https://spring.io/tools/sts/all
+
+Step 2 : Install xampp for your respective OS from below link.
+https://www.apachefriends.org/download.html

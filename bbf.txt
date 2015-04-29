@@ -1,0 +1,66 @@
+admins, bank employee normal users
+home page
+	atm system
+	online banking
+	b2b transfer
+	
+
+user account info about user acounts balance 
+ blocked account flag to block card with three wrong pin attempts
+ block account if no transaction for 12 months
+ 
+ 
+ admin account  multiple admins like account creator, card unblock, bank employees
+cash table to store cash for atm added by admin
+ 
+transaction table to store transaction history
+login account
+
+
+admin to ENTERS USER details
+user login account is created with password and iban and send an email back to client
+
+1. imp ATM user interface (Web-Browser): Withdraw cash
+	user enters iban and pin
+		block the card. 
+	enters amount to withdraw
+	check his balance -- and his daily withdrawl limit
+	
+	perform transaction if everything works.
+	done
+	?check amount contained in atm and then dispense cash
+	
+2.ATM user interface: Read transaction log
+	user gets his transaction log from transaction table
+	print a copy if i want
+	--report transaction?
+
+3.ATM local Terminal Application to maintain ATM (load with cash, reboot, update software)
+	admin  loads atm with cash cash info. admin can manually reboot application server and update software .
+	
+4.provide an ATM log where bank employees can see which customer took how much money
+	load logs for viewing customer debits.	
+
+5.Now cloud based ATM maintenance, but don't change user interface
+??	
+
+6. imp Online Banking: Place Wire Transfer requests 
+	WithinBank do it
+	other bank do it
+	
+7.Online Banking: Read transaction log
+	same as atm log.. print transactions table log for the particular user
+
+8. imp Connect to other banks to transfer money on behave of customers
+	use TCP sockets, SOAP, REST, ... to transfer this data.
+
+9.Bank A lends money to another bank
+	how to implement it??
+
+10.Bank emploeeWeb interface: access to all ATM logs, transfer money from Bank to Bank
+	covered in section 2  and 6 just give view for transactions
+11.Customers can withdraw cash at ATMs of everybank
+	use REST api. Ravi will explain more.
+	
+12.Display account balance at ATM and in the Online Banking
+	done 
