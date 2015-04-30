@@ -1,4 +1,4 @@
-package org.rwth.bb4.controller;
+package org.rwth.bbf4.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	public HomeController()
+	{
+		System.out.println("HomeController initiated");
+	}
 	
 	/**
 	 * Simply selects the home view to render by returning its name.

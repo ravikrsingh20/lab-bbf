@@ -1,10 +1,10 @@
-package org.rwth.bb4.dao;
+package org.rwth.bbf4.dao;
 
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.rwth.bb4.model.User;
+import org.rwth.bbf4.model.User;
 import org.springframework.stereotype.Repository;
 
  

@@ -1,8 +1,8 @@
-package org.rwth.bb4.dao;
+package org.rwth.bbf4.dao;
 
 import java.util.List;
 
-import org.rwth.bb4.model.User;
+import org.rwth.bbf4.model.User;
 
 public interface UserDao {
  

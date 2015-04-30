@@ -1,4 +1,4 @@
-package org.rwth.bb4.dao;
+package org.rwth.bbf4.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

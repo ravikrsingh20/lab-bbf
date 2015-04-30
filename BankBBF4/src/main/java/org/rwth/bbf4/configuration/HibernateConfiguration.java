@@ -1,4 +1,4 @@
-package org.rwth.bb4.configuration;
+package org.rwth.bbf4.configuration;
 
 
 import java.util.Properties;
