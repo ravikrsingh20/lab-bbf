@@ -1,4 +1,4 @@
-package org.rwth.bbf4;
+package org.rwth.bb4.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
