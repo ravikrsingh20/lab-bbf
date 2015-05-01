@@ -60,7 +60,12 @@ user login account is created with password and iban and send an email back to c
 10.Bank emploeeWeb interface: access to all ATM logs, transfer money from Bank to Bank
 	covered in section 2  and 6 just give view for transactions
 11.Customers can withdraw cash at ATMs of everybank
-	use REST api. Ravi will explain more.
+	use REST api. Eod ask other banks for money dispensed via your atms
 	
-12.Display account balance at ATM and in the Online Banking
+12.Display account balance at your own ATM and in the Online Banking
 	done 
+	
+13. Provide an Interface, so that other banks can implement 14.
+
+14. Display account balance and transaction log of customers of
+foreign banks at the ATM

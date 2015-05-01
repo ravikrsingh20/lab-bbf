@@ -1,0 +1,5 @@
+
+Also change password for default root in mysql for security reason
+Create a DB user bbf4dba with password P@ssbbf4_dba
+create database bank4_db
+use bank4_db;
