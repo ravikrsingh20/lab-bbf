@@ -1,19 +1,26 @@
 package org.rwth.bbf4.service;
 
+import javax.transaction.Transactional;
+
 import org.rwth.bbf4.dao.Dao;
+import org.rwth.bbf4.dao.UserAccountDao;
 import org.rwth.bbf4.dao.UserAccountDaoImpl;
 import org.rwth.bbf4.model.UserAccount;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
-
+	
+	@Autowired
+	UserAccountDao userAccountDao;
+	
 	@Override
+	@Transactional
 	public UserAccount createUserAccount(UserAccount useraccount) {
 		// TODO Auto-generated method stub		
-		Dao dao = new UserAccountDaoImpl();
-		dao.create(useraccount);
+		userAccountDao.create(useraccount);
 		 authorizeUserAccount(useraccount);
 		return useraccount;
 	}

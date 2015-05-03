@@ -1,15 +1,14 @@
 package org.rwth.bbf4.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.Date;
-import java.util.List;
+
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
 
 public abstract class AbstractDao<T extends Object>
 implements Dao<T>{

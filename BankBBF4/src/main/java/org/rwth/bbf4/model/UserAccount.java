@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "USER_ACNT")
 @NamedQuery(
 		name = "getAcntByEmail",
-		query = "from UserAccount where email like :email")
+		query = "from USER_ACNT where UA_EMAIL like :email")
 public class UserAccount {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
