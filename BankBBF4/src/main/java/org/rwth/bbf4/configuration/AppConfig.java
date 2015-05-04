@@ -25,9 +25,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	@Bean(name = "sessionFactory")
     public SessionFactory sessionFactory() {
         LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource());
-        builder
-        	.scanPackages("org.rwth.model")
-            .addProperties(getHibernateProperties());
+        builder.scanPackages("org.rwth.bbf4.model").addProperties(getHibernateProperties());
 
         return builder.buildSessionFactory();
     }
