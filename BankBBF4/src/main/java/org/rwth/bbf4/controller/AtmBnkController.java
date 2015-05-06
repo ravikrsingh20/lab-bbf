@@ -63,7 +63,6 @@ public class AtmBnkController {
 			 ua = service.withdrawCash(useraccount);
 		    }		
 			model.addAttribute("userAccount", ua);
-		return "regsuccess";
 		
 		return "withdrawlsuccess";
 	}
