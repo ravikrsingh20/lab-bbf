@@ -1,6 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -13,7 +12,7 @@
 	<div>
 		<table align="center">
 			<tr>
-				<td><font color="white" size="5px"> Select Your Bank</font></td>
+				<td><font color="white" size="5px"> Select Your Bank  </font></td>
 				<td><select name="bankName">
 					 <option value="Bank4">Bank4</option>
  					 <option value="Bank1">Bank1</option>
@@ -28,18 +27,18 @@
 				</td>
 			</tr>
 			<tr>
-				<td><font color="white" size="5px"> Select Your ATM</font></td>
-				<td>td><select name="atmName">
- 					 <option value="Atm1">Bank1</option>
-					 <option value="Atm2">Bank2</option>
-					 <option value="Atm3">Bank3</option>
+				<td><font color="white" size="5px"> Select Your ATM  </font></td>
+				<td><select name="atmName">
+ 					 <option value="Atm1">ATM1</option>
+					 <option value="Atm2">ATM2</option>
+					 <option value="Atm3">ATM3</option>
 					 </select>
-					 </td>
+				</td>
 			</tr>
 			<tr>
 				<td><font color="white" size="5px"> <a
-						href="cashwithdrawl"><font color="white">Withdraw Cash</font></a></font></td>
-				<td><font color="white" size="5px"> <a href="readtxnlog"><font
+						href="/atmbank/cashwithdrawl"><font color="white">Withdraw Cash</font></a></font></td>
+				<td><font color="white" size="5px"> <a href="/atmbank/readtxnlog"><font
 							color="white">Read Transaction Log</font></a></font></td>
 			</tr>
 

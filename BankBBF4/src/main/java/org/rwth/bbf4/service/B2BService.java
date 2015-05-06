@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class B2BService {
-	@Autowired
+	/*@Autowired
 	CashDetails CashDetailsDao;
 	@Autowired
-	CashDetails TxnDtlsDao;
+	CashDetails TxnDtlsDao;*/
 }
