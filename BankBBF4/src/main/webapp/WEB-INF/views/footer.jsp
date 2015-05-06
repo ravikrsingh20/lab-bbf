@@ -1,0 +1,1 @@
+<div id="copy">Copyright &copy; Bank BBF4</div>

@@ -29,8 +29,8 @@ public class UserAccount {
 	private Long id;
 	
 	
-	@Column(name = "UA_ACNT_ID", unique = true,	nullable = false, length = 12)
-	private String acntId;
+	@Column(name = "UA_ACNT_ID", unique = true, length = 12)
+	private String acntid;
 	
 	@Column(name = "UA_FNAME", nullable = false, length = 20)
 	@NotEmpty
@@ -54,11 +54,11 @@ public class UserAccount {
 	@Column(name = "UA_PHN_NO",nullable = true, length = 13)
 	private String phoneno;
 	
-	@Column(name = "UA_ADDRESS",nullable = true, length = 13)
-	private String Address;
+	@Column(name = "UA_ADDRESS",nullable = true, length = 30)
+	private String address;
 	
 	@Column(name = "UA_ATM_PIN")
-	private String atmPin;
+	private String atmpin;
 	
 	@Column(name = "UA_ONLN_PIN")
 	private String onlnpin;
@@ -105,24 +105,24 @@ public class UserAccount {
 	public void setPhoneno(String phoneno) {
 		this.phoneno = phoneno;
 	}
+
+	public String getAcntid() {
+		return acntid;
+	}
+	public void setAcntid(String acntid) {
+		this.acntid = acntid;
+	}
 	public String getAddress() {
-		return Address;
+		return address;
 	}
 	public void setAddress(String address) {
-		Address = address;
+		this.address = address;
 	}
-	
-	public String getAcntId() {
-		return acntId;
+	public String getAtmpin() {
+		return atmpin;
 	}
-	public void setAcntId(String acntId) {
-		this.acntId = acntId;
-	}
-	public String getAtmPin() {
-		return atmPin;
-	}
-	public void setAtmPin(String atmPin) {
-		this.atmPin = atmPin;
+	public void setAtmpin(String atmpin) {
+		this.atmpin = atmpin;
 	}
 	public String getOnlnpin() {
 		return onlnpin;

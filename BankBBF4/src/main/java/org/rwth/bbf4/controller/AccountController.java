@@ -58,13 +58,13 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String doRegistration(@ModelAttribute("UserAccount") @Valid UserAccount useraccount, BindingResult result, WebRequest request, Errors errors) {
+	public String doRegistration(@ModelAttribute("UserAccount") @Valid UserAccount useraccount, BindingResult result, Errors errors,Model model) {
 		
 		UserAccount ua = new UserAccount();
 		 if (!result.hasErrors()) {
 			 ua = service.createUserAccount(useraccount);
 		    }		
-				
+			model.addAttribute("userAccount", ua);
 		return "regsuccess";
 	}
 
