@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <%@ page session="false"%>
 <html>
 <head>
@@ -8,42 +9,31 @@
 </head>
 <body>
 	<%@ include file="header.jsp"%>
+	<c:out value="${userAccount.msg}" />
 	<h1>ATM Banking!! Please Select your option</h1>
 	<div>
 		<table align="center">
 			<tr>
-				<td><font color="white" size="5px"> Select Your Bank  </font></td>
-				<td><select name="bankName">
-					 <option value="Bank4">Bank4</option>
- 					 <option value="Bank1">Bank1</option>
-					 <option value="Bank2">Bank2</option>
-					 <option value="Bank3">Bank3</option>					 
-					 <option value="Bank5">Bank5</option>
-					 <option value="Bank6">Bank6</option>
-					 <option value="Bank7">Bank7</option>
-					 <option value="Bank8">Bank8</option>
-					 <option value="Bank9">Bank9</option>					 
-					</select>
+				<td>
+					<div class="boxhead">
+						<div class="modern1">
+							<font color="white" size="5px"> <a href="/bbf4/atmbank/cashwithdrawl"><font
+									color="white">Withdraw Cash</font></a></font>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>
-				<td><font color="white" size="5px"> Select Your ATM  </font></td>
-				<td><select name="atmName">
- 					 <option value="Atm1">ATM1</option>
-					 <option value="Atm2">ATM2</option>
-					 <option value="Atm3">ATM3</option>
-					 </select>
+				<td>
+					<div class="boxhead">
+						<div class="modern1">
+							<font color="white" size="5px"> <a href="/bbf4/atmbank/readtxnlog"><font
+									color="white">Read Transaction</font></a></font>
+						</div>
+					</div>
 				</td>
 			</tr>
-			<tr>
-				<td><font color="white" size="5px"> <a
-						href="/atmbank/cashwithdrawl"><font color="white">Withdraw Cash</font></a></font></td>
-				<td><font color="white" size="5px"> <a href="/atmbank/readtxnlog"><font
-							color="white">Read Transaction Log</font></a></font></td>
-			</tr>
-
 		</table>
 	</div>
-	<%@ include file="footer.jsp"%>
 </body>
 </html>

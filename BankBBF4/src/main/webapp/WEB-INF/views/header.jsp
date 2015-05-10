@@ -5,7 +5,7 @@
 			<td>
 				<div class="boxhead">
 					<div class="modern1">
-						<font color="white" size="5px"> <a href="register"><font
+						<font color="white" size="5px"> <a href="/bbf4/register"><font
 								color="white">Register Account</font></a></font>
 					</div>
 				</div>
@@ -13,7 +13,7 @@
 			<td>
 				<div class="boxhead">
 					<div class="modern1">
-						<font color="white" size="5px"> <a href="onlinebank"><font
+						<font color="white" size="5px"> <a href="/bbf4/onlinebank"><font
 								color="white">Online Banking</font></a></font>
 					</div>
 				</div>
@@ -21,7 +21,7 @@
 			<td>
 				<div class="boxhead">
 					<div class="modern1">
-						<font color="white" size="5px"> <a href="atmbank"><font
+						<font color="white" size="5px"> <a href="/bbf4/atmbank"><font
 								color="white">ATM Banking</font></a></font>
 					</div>
 				</div>
@@ -29,7 +29,7 @@
 			<td>
 				<div class="boxhead">
 					<div class="modern1">
-						<font color="white" size="5px"> <a href="b2bbank"><font
+						<font color="white" size="5px"> <a href="/bbf4/b2bbank"><font
 								color="white">B2B Banking</font></a></font>
 					</div>
 				</div>

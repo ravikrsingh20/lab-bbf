@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * model class to store transaction details of every credit and debit made to the atm
@@ -16,6 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TXN_DTLS")
+@NamedQueries({ @NamedQuery(name = "getTxnDtlsByAcntId", query = "from TxnDtls txn where txn.txnacntid = :acntid ORDER BY txn.execdt desc" )})
 public class TxnDtls {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -25,6 +29,8 @@ public class TxnDtls {
 	private String atmname;
 	@Column(name = "TXN_AMT")
 	private double txnamt;
+	@Column(name = "TXN_ACNT_ID")
+	private String txnacntid;
 	@Column(name = "TXN_CR_BNK_NM")
 	private String txncrbnknm;
 	@Column(name = "TXN_CR_ACNT_ID")
@@ -39,8 +45,17 @@ public class TxnDtls {
 	private String txntyp;
 	@Column(name = "TXN_ORD_DT")
 	private Timestamp orddt;
+	
 	@Column(name = "TXN_EXEC_DT")
 	private Timestamp execdt;
+	@Transient
+	private String msg;
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 	public long getTxnid() {
 		return txnid;
 	}
@@ -77,6 +92,12 @@ public class TxnDtls {
 	public void setTxndrbnknm(String txndrbnknm) {
 		this.txndrbnknm = txndrbnknm;
 	}
+	public String getTxntyp() {
+		return txntyp;
+	}
+	public void setTxntyp(String txntyp) {
+		this.txntyp = txntyp;
+	}
 	public String getTxndracntid() {
 		return txndracntid;
 	}
@@ -100,6 +121,12 @@ public class TxnDtls {
 	}
 	public void setExecdt(Timestamp execdt) {
 		this.execdt = execdt;
+	}
+	public String getTxnacntid() {
+		return txnacntid;
+	}
+	public void setTxnacntid(String txnacntid) {
+		this.txnacntid = txnacntid;
 	}
 	
 	

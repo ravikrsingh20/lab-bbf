@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "org.rwth.*" })
+@ComponentScan({ "org.rwth.bbf4.*" })
 @EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter{
 
@@ -34,7 +34,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         Properties prop = new Properties();
         prop.put("hibernate.format_sql", "true");
         prop.put("hibernate.show_sql", "true");
-        prop.put("hibernate.hbm2ddl.auto", "create");
+        prop.put("hibernate.hbm2ddl.auto", "update");
         prop.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return prop;
     }

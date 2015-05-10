@@ -5,8 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -19,9 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "USER_ACNT")
-@NamedQuery(
-		name = "getAcntByEmail",
-		query = "from UserAccount where email like :email")
+@NamedQueries({ @NamedQuery(name = "getUserByAcntId", query = "from UserAccount ua where ua.acntid = :acntid" )})
 public class UserAccount {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -68,6 +68,38 @@ public class UserAccount {
 	
 	@Column(name = "UA_ENABLED")
 	private String enabled;
+	@Transient
+	private double amt;
+	@Transient
+	private String msg;
+	@Transient
+	private String bnkname;
+	@Transient
+	private String atmname;
+	public String getBnkname() {
+		return bnkname;
+	}
+	public void setBnkname(String bnkname) {
+		this.bnkname = bnkname;
+	}
+	public String getAtmname() {
+		return atmname;
+	}
+	public void setAtmname(String atmname) {
+		this.atmname = atmname;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	public double getAmt() {
+		return amt;
+	}
+	public void setAmt(double amt) {
+		this.amt = amt;
+	}
 	public Long getId() {
 		return id;
 	}

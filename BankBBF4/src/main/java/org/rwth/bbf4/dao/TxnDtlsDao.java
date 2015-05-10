@@ -1,8 +1,13 @@
 package org.rwth.bbf4.dao;
 
-import org.rwth.bbf4.model.TxnDtls;
+import java.util.List;
 
-public class TxnDtlsDao extends AbstractDao<TxnDtls> {
-	
+import org.rwth.bbf4.model.TxnDtls;
+import org.rwth.bbf4.model.UserAccount;
+
+public interface TxnDtlsDao extends Dao<TxnDtls>{
+	public List<TxnDtls> getTxnDtlsB2B(UserAccount useraccount);
+	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount);
+	public List<TxnDtls> getTxnDtlsAtm(UserAccount useraccount);
 
 }
