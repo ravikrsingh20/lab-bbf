@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 public interface AtmService {
 	public UserAccount withdrawCash(UserAccount useraccount);
-	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount);
-	public List<TxnDtls> getTxnDtlsB2B(UserAccount useraccount);
+	public UserAccount viewBalance(UserAccount useraccount);
 	public List<TxnDtls> getTxnDtlsAtm(UserAccount useraccount);
 }

@@ -67,7 +67,7 @@ public class UserAccount {
 	private double balance;
 	
 	@Column(name = "UA_ENABLED")
-	private String enabled;
+	private boolean enabled;
 	@Transient
 	private double amt;
 	@Transient
@@ -168,10 +168,10 @@ public class UserAccount {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	public String getEnabled() {
+	public boolean getEnabled() {
 		return enabled;
 	}
-	public void setEnabled(String enabled) {
+	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 	

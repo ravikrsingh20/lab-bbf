@@ -42,27 +42,7 @@ public class AtmServiceImpl implements AtmService {
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
 				// password matches
-				if (ua.getBalance() >= useraccount.getAmt() ){
-					// dispense cash and update the balance in account
-					ua.setBalance(ua.getBalance() - useraccount.getAmt());
-					userAccountDao.update(ua);
-
-					// also create an entry in txn table
-					txnDtls.setAtmname(useraccount.getAtmname());
-					txnDtls.setExecdt(new Timestamp(date.getTime()));
-					txnDtls.setOrddt(new Timestamp(date.getTime()));
-					txnDtls.setTxnamt(useraccount.getAmt());
-					//txnDtls.setTxncracntid(txncracntid); no cr 
-					//txnDtls.setTxncrbnknm();
-					txnDtls.setTxndracntid(useraccount.getAtmname());
-					txnDtls.setTxndrbnknm(useraccount.getBnkname());
-					txnDtls.setTxnacntid(ua.getAcntid());
-					txnDtls.setTxnflg("DR");
-					txnDtls.setTxntyp("ATM");
-
-					txnDtlsDao.create(txnDtls);
-
-					// update atm balance
+				if (ua.getBalance() >= useraccount.getAmt() ){						
 					int id=0 ;
 					if (useraccount.getAtmname().equals("ATM1"))
 						cashDetails = cashDetailsDao.get(1);
@@ -70,15 +50,41 @@ public class AtmServiceImpl implements AtmService {
 						cashDetails	= cashDetailsDao.get(2);
 					else if (useraccount.getAtmname().equals("ATM3"))
 						cashDetails = cashDetailsDao.get(3);
+					if(cashDetails.getAmount() >= useraccount.getAmt()){
+						// dispense cash and update the balance in account
+						ua.setBalance(ua.getBalance() - useraccount.getAmt());
+						userAccountDao.update(ua);
 
-					cashDetails.setAmount(cashDetails.getAmount()-useraccount.getAmt());
-					cashDetailsDao.update(cashDetails);		
-					useraccount.setBalance(ua.getBalance());
-					useraccount.setMsg("Dispensing Cash!!\n Amount"
-							+ useraccount.getAmt()
-							+ " successfully withdrawn"
-							+" \n Remaining Balance is "
-							+ua.getBalance());
+						// also create an entry in txn table
+						txnDtls.setAtmname(useraccount.getAtmname());
+						txnDtls.setExecdt(new Timestamp(date.getTime()));
+						txnDtls.setOrddt(new Timestamp(date.getTime()));
+						txnDtls.setTxnamt(useraccount.getAmt());
+						//txnDtls.setTxncracntid(txncracntid); no cr 
+						//txnDtls.setTxncrbnknm();txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm()
+						txnDtls.setTxncrdracntid(useraccount.getAtmname());
+						txnDtls.setTxncrdrbnknm(useraccount.getBnkname());
+						txnDtls.setTxnacntid(ua.getAcntid());
+						txnDtls.setTxnflg("DR");
+						txnDtls.setTxntyp("ATM");
+						txnDtls.setTxnstat("Processed");
+
+						txnDtlsDao.create(txnDtls);
+						// update atm balance
+						cashDetails.setAmount(cashDetails.getAmount()-useraccount.getAmt());
+						cashDetailsDao.update(cashDetails);		
+						useraccount.setBalance(ua.getBalance());
+						useraccount.setMsg("Dispensing Cash!!\n Amount"
+								+ useraccount.getAmt()
+								+ " successfully withdrawn"
+								+" \n Remaining Balance is "
+								+ua.getBalance());
+						
+					}
+					else{
+						useraccount.setMsg("Sorry!! ATM doesnot have sufficient cash try other atms");
+					}
+					
 				}
 				else {
 					useraccount.setMsg("Sorry!! Not enough balance. Your Balance is "
@@ -128,18 +134,19 @@ public class AtmServiceImpl implements AtmService {
 				for (TxnDtls txnDtlsTmp : txndtlsList){
 					txnDtlsret = new  TxnDtls();
 					msg="";
-					txnDtls.setTxnamt(txnDtlsTmp.getTxnamt());
-					txnDtls.setTxnacntid(txnDtlsTmp.getTxnacntid());
-					txnDtls.setExecdt(txnDtlsTmp.getExecdt());
+					txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
+					txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
+					txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
+					txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
 					// set message to be displayed
 					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
 						msg += " Online Transaction.";
 						msg += " " + txnDtlsTmp.getTxnamt();
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-							msg += " Euro Credited to Your Account from Bank Account : "+txnDtls.getTxncracntid() +" Bank Name : "+txnDtls.getTxncrbnknm();
+							msg += " Euro Credited to Your Account from Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account to Bank Account : "+txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm();
+							msg += " Euro Debited from Your Account to Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 					}
 						
@@ -147,10 +154,10 @@ public class AtmServiceImpl implements AtmService {
 						msg += " ATM Transaction.";
 						msg += " " + txnDtlsTmp.getTxnamt();
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-							msg += " Euro Credited to Your Account from ATM : "+txnDtls.getTxncracntid() +" Bank Name : "+txnDtls.getTxncrbnknm();
+							msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account from ATM : "+txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm();
+							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 					}
 						
@@ -158,8 +165,8 @@ public class AtmServiceImpl implements AtmService {
 						msg += " Bank 2 Bank Transaction.";
 						msg += " " + txnDtlsTmp.getTxnamt();
 					}				
-					txnDtls.setMsg(msg);
-					txndtlsListret.add(txnDtls);
+					txnDtlsret.setMsg(msg);
+					txndtlsListret.add(txnDtlsret);
 					
 				}
 				useraccount.setMsg("OK");
@@ -177,20 +184,22 @@ public class AtmServiceImpl implements AtmService {
 		return txndtlsListret;
 	}
 
-
 	@Override
-	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount){
-		List<TxnDtls>  txndtlsList = new ArrayList<TxnDtls>();
-
-
-
-		return txndtlsList;
-	}
-	@Override
-	public List<TxnDtls> getTxnDtlsB2B(UserAccount useraccount){
-		List<TxnDtls>  txndtlsList = new ArrayList<TxnDtls>();
-
-		return txndtlsList;
+	public UserAccount viewBalance(UserAccount useraccount) {
+		// TODO Auto-generated method stub
+		UserAccount ua  ;
+		if(useraccount.getBnkname().equals("BANK4")){
+			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
+			ua = ualist.get(0);
+			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+				useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+ua.getBalance());
+				
+			}
+			else
+				useraccount.setMsg("ATM Pin and Account no. doesnot match");
+		}
+		return useraccount;
 	}
 
 

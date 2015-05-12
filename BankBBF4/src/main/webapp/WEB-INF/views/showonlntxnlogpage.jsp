@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
-<%@ page session="false"%>
+<%@ page session="true"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -30,7 +30,11 @@
 					<td><c:out value="${txnDtls.msg}" /></td>
 				</tr>
 			</c:forEach>
-
+			<tr>
+				<td colspan="4" align = "center"><font color="white" size="5px"> <a
+						href="/bbf4/login"><font color="white">
+								Back to Online Banking</font></a></font></td>
+			</tr>
 
 		</table>
 	</div>

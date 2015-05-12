@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.rwth.bbf4.model.AccountRole;
 import org.rwth.bbf4.model.UserAccount;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,13 @@ public class UserAccountDaoImpl extends AbstractDao<UserAccount> implements User
 		return (List<UserAccount>) getSession()
 				.getNamedQuery("getUserByAcntId")
 				.setString("acntid", acntid ).list();
+	}
+
+	@Override
+	public AccountRole createAccountRole(AccountRole ar) {
+		// TODO Auto-generated method stub
+		getSession().save(ar);
+		return ar;
 	}
 
 	

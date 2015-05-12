@@ -3,15 +3,18 @@
 <%@ page session="false"%>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css"	href="<c:url value="/resources/css/style.css" />">
-<title>ATM Banking</title>
+<title>View Balance</title>
 </head>
 <body>
 	<%@ include file="header.jsp"%>
-	<h1>ATM Banking!! Please fill below details to withdraw cash</h1>
-	<c:out value="${userAccount.msg}" />
+	<h1>
+		View Balance.
+		<c:out value="${userAccount.msg}" />
+	</h1>
 	<div>
-		<sf:form method="POST" commandName="UserAccount" action="/bbf4/atmbank/cashwithdrawl">
+		<sf:form method="POST" commandName="UserAccount" action="/bbf4/atmbank/viewbal">
 			<table align="center">
 				<tr>
 					<td><sf:label path="bnkname" cssErrorClass="error">Select Your Bank </sf:label>:
@@ -45,14 +48,10 @@
 					</td>
 					<td><sf:password path="atmpin" cssErrorClass="error" /></td>
 				</tr>
-				<tr>
-					<td><sf:label path="amt" cssErrorClass="error">Enter amount to withdraw</sf:label>:
-					</td>
-					<td><sf:input path="amt" cssErrorClass="error" /></td>
-				</tr>
+				
 				<tr>
 				<td colspan="2" align="center"><input type="submit"
-						value="Withdraw Cash" /></td>
+						value="View Balance" /></td>
 					
 				</tr>
 
@@ -60,6 +59,6 @@
 		</sf:form>
 	</div>
 	<%@ include file="footer.jsp"%>
-	
 </body>
+
 </html>

@@ -19,4 +19,5 @@ public class SpringMvcInitializer extends AbstractAnnotationConfigDispatcherServ
 		return new String[] { "/" };
 	}
 	
+	
 }

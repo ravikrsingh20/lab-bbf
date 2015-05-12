@@ -31,23 +31,21 @@ public class TxnDtls {
 	private double txnamt;
 	@Column(name = "TXN_ACNT_ID")
 	private String txnacntid;
-	@Column(name = "TXN_CR_BNK_NM")
-	private String txncrbnknm;
-	@Column(name = "TXN_CR_ACNT_ID")
-	private String txncracntid;
-	@Column(name = "TXN_DR_BNK_NM")
-	private String txndrbnknm;
-	@Column(name = "TXN_DR_ACNT_ID")
-	private String txndracntid;
+	@Column(name = "TXN_CR_DR_BNK_NM")
+	private String txncrdrbnknm;
+	@Column(name = "TXN_CR_DR_ACNT_ID")
+	private String txncrdracntid;
 	@Column(name = "TXN_FLG")
 	private String txnflg;
 	@Column(name = "TXN_TYP")
 	private String txntyp;
 	@Column(name = "TXN_ORD_DT")
 	private Timestamp orddt;
-	
+	@Column(name = "TXN_STAT")
+	private String txnstat;
 	@Column(name = "TXN_EXEC_DT")
 	private Timestamp execdt;
+	
 	@Transient
 	private String msg;
 	public String getMsg() {
@@ -71,38 +69,34 @@ public class TxnDtls {
 	public double getTxnamt() {
 		return txnamt;
 	}
+	public String getTxnstat() {
+		return txnstat;
+	}
+	public void setTxnstat(String txnstat) {
+		this.txnstat = txnstat;
+	}
 	public void setTxnamt(double txnamt) {
 		this.txnamt = txnamt;
 	}
-	public String getTxncrbnknm() {
-		return txncrbnknm;
-	}
-	public void setTxncrbnknm(String txncrbnknm) {
-		this.txncrbnknm = txncrbnknm;
-	}
-	public String getTxncracntid() {
-		return txncracntid;
-	}
-	public void setTxncracntid(String txncracntid) {
-		this.txncracntid = txncracntid;
-	}
-	public String getTxndrbnknm() {
-		return txndrbnknm;
-	}
-	public void setTxndrbnknm(String txndrbnknm) {
-		this.txndrbnknm = txndrbnknm;
-	}
+	
 	public String getTxntyp() {
 		return txntyp;
 	}
 	public void setTxntyp(String txntyp) {
 		this.txntyp = txntyp;
 	}
-	public String getTxndracntid() {
-		return txndracntid;
+	
+	public String getTxncrdrbnknm() {
+		return txncrdrbnknm;
 	}
-	public void setTxndracntid(String txndracntid) {
-		this.txndracntid = txndracntid;
+	public void setTxncrdrbnknm(String txncrdrbnknm) {
+		this.txncrdrbnknm = txncrdrbnknm;
+	}
+	public String getTxncrdracntid() {
+		return txncrdracntid;
+	}
+	public void setTxncrdracntid(String txncrdracntid) {
+		this.txncrdracntid = txncrdracntid;
 	}
 	public String getTxnflg() {
 		return txnflg;

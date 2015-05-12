@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "org.rwth.bbf4.*" })
+@Import({ SecurityConfig.class })
 @EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter{
 
@@ -40,14 +43,15 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     }
 	
 	@Bean(name = "dataSource")
-	public BasicDataSource dataSource() {
+	public DriverManagerDataSource dataSource() {
+		 DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		
 		BasicDataSource ds = new BasicDataSource();
-	    ds.setDriverClassName("com.mysql.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://localhost:3306/bank4_db");
-		ds.setUsername("bbf4dba");
-		ds.setPassword("P@ssbbf4_dba");
-		return ds;
+		driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/bank4_db");
+		driverManagerDataSource.setUsername("bbf4dba");
+		driverManagerDataSource.setPassword("P@ssbbf4_dba");
+		return driverManagerDataSource;
 	}
 	
 	@Bean
@@ -67,6 +71,10 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	public void configureDefaultServletHandling(
 	DefaultServletHandlerConfigurer configurer) {
 	configurer.enable();
+	}
+	@Bean(name = "successHandler")
+	public BBF4AuthenticationSuccessHandler getSuccessHandler(){
+		return new BBF4AuthenticationSuccessHandler();
 	}
 	
 }

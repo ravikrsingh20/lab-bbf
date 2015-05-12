@@ -32,71 +32,120 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AtmBnkController {
 	private static final Logger logger = LoggerFactory.getLogger(AtmBnkController.class);
 	@Autowired
-    private AtmService atmService;
+	private AtmService atmService;
 	public AtmBnkController()
 	{
 		System.out.println("AtmBnkController initiated");
 	}
-	
+
 	@RequestMapping(value = "/atmbank", method = RequestMethod.GET)
 	public String showAtmPage(@ModelAttribute("UserAccount") UserAccount useraccount, Model model) {
-				
+
 		return "atmpage";
 	}
-	
+
 	@RequestMapping(value = "/atmbank/cashwithdrawl", method = RequestMethod.GET)
 	public String getWithdrawCash(Model model) {
 		model.addAttribute("UserAccount",new UserAccount());
 		return "cashwithdrawlpage";				
 	}
-	
+
 	@RequestMapping(value = "/atmbank/cashwithdrawl", method = RequestMethod.POST)
 	public String postWithdrawCash(@ModelAttribute("UserAccount") @Valid UserAccount useraccount,BindingResult result, Errors errors,Model model) {
 		//useraccount is not null and has bankname and atm name
-		if(useraccount != null && !(useraccount.getBnkname().equals(null) || useraccount.getAtmname().equals(null) )){
-			// check if balance is not 0
-			if(useraccount.getAmt() != 0){
-				UserAccount ua = new UserAccount();
-				ua = atmService.withdrawCash(useraccount);				
-				model.addAttribute("userAccount", ua);	
-				return "withdrawlsuccess";
-			} else {
-				UserAccount ua = new UserAccount();
-				useraccount.setMsg("Enter some amount to withdraw");
-				model.addAttribute("UserAccount",ua);					
-			}						
-					
-		}	
-		return "cashwithdrawlpage";
-				
+		UserAccount ua = new UserAccount();
+		// check if balance is not 0
+		if (useraccount.getAtmpin().length() != 4){
+			ua.setMsg("Enter 4 digit pin");
+			model.addAttribute("UserAccount",ua);	
+			return "cashwithdrawlpage";
+
+		}
+
+		if (useraccount.getAcntid().length() != 12){
+			ua.setMsg("Enter 12 digit iban number");
+			model.addAttribute("UserAccount",ua);	
+			return "cashwithdrawlpage";
+		}
+
+		if(useraccount.getAmt() == 0){	
+			ua.setMsg("Enter some amount to withdraw");
+			model.addAttribute("UserAccount",ua);
+			return "cashwithdrawlpage";
+
+		} 					
+
+		ua = atmService.withdrawCash(useraccount);				
+		model.addAttribute("userAccount", ua);	
+		return "withdrawlsuccess";	
 	}
-	
+
 	@RequestMapping(value = "/atmbank/readtxnlog", method = RequestMethod.GET)
 	public String getReadTxnLog(Model model) {
 		model.addAttribute("UserAccount", new UserAccount() );
 		return "readtxnlogpage";
-				
+
 	}
 
 	@RequestMapping(value = "/atmbank/readtxnlog", method = RequestMethod.POST)
 	public String postReadTxnLog(@ModelAttribute("UserAccount") @Valid UserAccount useraccount, BindingResult result, Errors errors,Model model) {
-			
-		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();				
+
+		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();	
+		UserAccount ua = new UserAccount();
 		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
 		// checks msg if there is some error msg like pin doesnot match
+		if (useraccount.getAtmpin().length() != 4){
+			ua.setMsg("Enter 4 digit atm pin");
+			model.addAttribute("UserAccount", ua );
+			return "readtxnlogpage";
+
+		}
+
+		if (useraccount.getAcntid().length() != 12){
+			ua.setMsg("Enter 12 digit iban no.");
+			model.addAttribute("UserAccount", ua );
+			return "readtxnlogpage";
+		}
 		if (useraccount.getMsg().equals("OK")) {
 			model.addAttribute("TxnDtlsList", txndtlslist );
+			model.addAttribute("UserAccount", useraccount );
 			return "showtxnlogpage";
 		}			
 		else{
-			UserAccount ua = new UserAccount();
 			ua.setMsg(useraccount.getMsg());
 			model.addAttribute("UserAccount", ua );
 			return "readtxnlogpage"; 
 		}
-						
-		
-		
-		
+
 	}
+
+	@RequestMapping(value = "/atmbank/viewbal", method = RequestMethod.GET)
+	public String getViewBal(Model model) {
+		model.addAttribute("UserAccount",new UserAccount());
+		return "viewbalance";				
+	}
+
+	@RequestMapping(value = "/atmbank/viewbal", method = RequestMethod.POST)
+	public String postViewBal(@ModelAttribute("UserAccount") @Valid UserAccount useraccount,BindingResult result, Errors errors,Model model) {
+		//useraccount is not null and has bankname and atm name
+		UserAccount ua = new UserAccount();
+		// check if balance is not 0
+		if (useraccount.getAtmpin().length() != 4){
+			ua.setMsg("Enter 4 digit pin");
+			model.addAttribute("UserAccount",ua);	
+			return "viewbalance";
+
+		}
+
+		if (useraccount.getAcntid().length() != 12){
+			ua.setMsg("Enter 12 digit iban number");
+			model.addAttribute("UserAccount",ua);	
+			return "viewbalance";
+		}				
+
+		ua = atmService.viewBalance(useraccount);				
+		model.addAttribute("userAccount", ua);	
+		return "showbalance";	
+	}
+
 }

@@ -3,6 +3,7 @@ package org.rwth.bbf4.service;
 import javax.transaction.Transactional;
 
 import org.rwth.bbf4.dao.UserAccountDao;
+import org.rwth.bbf4.model.AccountRole;
 import org.rwth.bbf4.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,13 +32,16 @@ public class UserAccountServiceImpl implements UserAccountService {
 	public UserAccount authorizeUserAccount(UserAccount useraccount) {
 		// TODO Auto-generated method stub
 		UserAccount ua = new UserAccount();
+		AccountRole ar = new AccountRole();
+		
+		
 		
 		//useraccount = userAccountDao.getAcntByEmail(useraccount.getEmail());
 		int atmpin = (int)(Math.random()*10000);
 		int onlnpin = (int)(Math.random()*100000);
 		useraccount.setAtmpin( String.format("%04d",atmpin));
 		useraccount.setOnlnpin(String.format("%05d",onlnpin));
-		useraccount.setEnabled("ToBAuth");
+		useraccount.setEnabled(true);
 		String acntId = String.format("%08d",useraccount.getId());
 		useraccount.setAcntid("BNK4" + acntId);
 		
@@ -52,6 +56,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 		useraccount.setAtmpin(passwordEncoder.encode(useraccount.getAtmpin())); 
 		useraccount.setOnlnpin(passwordEncoder.encode(useraccount.getOnlnpin()));
 		userAccountDao.update(useraccount);
+		
+		//update account_role table
+		ar.setAcntId(useraccount.getAcntid());
+		ar.setRoleId(3);// for customer
+		ar.setRlnm("CUST");
+		userAccountDao.createAccountRole(ar);
+		
 		return ua;
 	}
 

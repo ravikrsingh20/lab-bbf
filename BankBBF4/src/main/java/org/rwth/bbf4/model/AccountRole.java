@@ -20,6 +20,9 @@ public class AccountRole {
 	private Integer acntRoleId;
 	@Column(name = "AR_ACNT_ID", nullable = false, length = 12)
 	private String acntId;
+	@Column(name = "AR_RL_NM", nullable = false, length = 4)
+	private String rlnm;
+	
 	@Column(name = "AR_RL_ID", nullable = false)
 	private Integer roleId;
 	public Integer getAcntRoleId() {
@@ -39,6 +42,12 @@ public class AccountRole {
 	}
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
+	}
+	public String getRlnm() {
+		return rlnm;
+	}
+	public void setRlnm(String rlnm) {
+		this.rlnm = rlnm;
 	}
 	
 	

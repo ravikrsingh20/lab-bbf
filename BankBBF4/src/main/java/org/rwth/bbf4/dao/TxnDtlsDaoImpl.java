@@ -20,7 +20,9 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 	@Override
 	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount) {
 		// TODO Auto-generated method stub
-		return null;
+		return (List<TxnDtls>) getSession()
+				.getNamedQuery("getTxnDtlsByAcntId")
+				.setString("acntid", useraccount.getAcntid() ).list();	
 	}
 
 	@Override
