@@ -45,6 +45,10 @@ public class OnlineServiceImpl implements OnlineService{
 					// destination account exists
 					uadest = ualist.get(0);
 					if(uadest.getAcntid().equals(uasrc.getAcntid())){
+						txndtls.setMsg("Error!! Creditor and Debitor Account are same");
+						
+					}
+					else {
 						// create 2 entries in txn table for cr and dr
 						uasrc.setBalance(uasrc.getBalance() - txndtls.getTxnamt());
 						userAccountDao.update(uasrc);
@@ -75,10 +79,8 @@ public class OnlineServiceImpl implements OnlineService{
 						txnDtlstmpdest.setTxnstat("Processed");
 						txnDtlsDao.create(txnDtlstmpdest);
 						txndtls.setMsg("Wire Transfer Request completed successfully.");
-						
 					}
-					else
-						txndtls.setMsg("Error!! Creditor and Debitor Account are same");
+						
 										
 				}else {
 					txndtls.setMsg("Error!! Destination Account Doesnot exist");

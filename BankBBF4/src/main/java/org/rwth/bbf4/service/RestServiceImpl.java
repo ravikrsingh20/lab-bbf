@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service("restService")
 @Transactional
@@ -80,21 +83,21 @@ public class RestServiceImpl implements RestService {
 							return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
 						}
 						else{
-							return new ResponseEntity<JsonUser>(user,HttpStatus.UPGRADE_REQUIRED); //426
+							return new ResponseEntity<JsonUser>(user,HttpStatus.UPGRADE_REQUIRED); //426 not enough balance in atm
 						}
 						
 					}
 					else {
-						return new ResponseEntity<JsonUser>(user,HttpStatus.UNPROCESSABLE_ENTITY); //422
+						return new ResponseEntity<JsonUser>(user,HttpStatus.UNPROCESSABLE_ENTITY); //422 not enough balance in account of customer
 					}
 				}
 				else {
-					return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401
+					return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
 
 				}
 				
 			} else 
-				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist
 			
 
 	
@@ -198,5 +201,34 @@ public class RestServiceImpl implements RestService {
 		return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.NOT_FOUND);//404
 	}
 	
+	public ResponseEntity<JsonUser> validate(JsonUser user) {
+		UserAccount ua  ;
+		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
+		if(ualist.equals(null)){
+			ua = ualist.get(0);
+			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
+				return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
+				
+			}
+			else
+				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
+		}
+		else 
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
+	    
+	}
+	
+	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
+		UserAccount ua  ;
+		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
+		if(!(ualist.equals(null))){
+			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
+		}
+		else 
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
+	    
+						    
+	}
 	
 }

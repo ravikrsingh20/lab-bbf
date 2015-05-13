@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service("atmService")
 @Transactional
@@ -101,6 +102,7 @@ public class AtmServiceImpl implements AtmService {
 
 		}else {
 			// call web service of other bank to facilitate cash withdrawl of foreign bank atms
+			RestTemplate restTemplate = new RestTemplate();
 		}
 
 

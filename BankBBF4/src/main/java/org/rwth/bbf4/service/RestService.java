@@ -10,5 +10,7 @@ public interface RestService {
 	ResponseEntity<JsonUser> cashWithdraw(JsonUser user);
 	ResponseEntity<JsonUser> viewBal(JsonUser user);
 	ResponseEntity<List<JsonTxnDtls>> readTxn(JsonUser user);
+	public ResponseEntity<JsonUser> validate(JsonUser user) ;
+	public ResponseEntity<JsonUser> validateAccountId(JsonUser user);
 
 }

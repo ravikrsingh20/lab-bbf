@@ -43,6 +43,16 @@
 					</div>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<div class="boxhead">
+						<div class="modern1">
+							<font color="white" size="5px"> <a href="/bbf4/validate/viewBal"><font
+									color="white">WS View Balance</font></a></font>
+						</div>
+					</div>
+				</td>
+			</tr>
 		</table>
 	</div>
 </body>

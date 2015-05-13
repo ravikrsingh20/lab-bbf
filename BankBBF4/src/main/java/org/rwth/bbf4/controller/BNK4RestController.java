@@ -27,16 +27,34 @@ public class BNK4RestController {
 	{
 		System.out.println("BNK4RestController initiated");
 	}
-//	@RequestMapping(value = "/", method = RequestMethod.POST)
-//	public ResponseEntity validate(@RequestBody  JsonUser user) {
-//		if(user.getMethodName().equals("cashWithdraw")){
-//			return (ResponseEntity) cashWithdraw(user);				
-//		}else if (user.getMethodName().equals("viewBal")){
-//			return (ResponseEntity) viewBal(user);
-//		} else if (user.getMethodName().equals("readTxn")){
-//			return (ResponseEntity) readTxn(user);
-//		}					    
-//	}
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ResponseEntity<JsonUser> getvalidate() {
+		JsonUser user = new JsonUser();
+		user.setCardNumber("BNK400000003");
+		user.setAmount(100);
+		user.setPin("0532");
+			return new ResponseEntity<JsonUser>(user,HttpStatus.OK);
+						    
+	}
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public ResponseEntity<JsonUser> validate(@RequestBody  JsonUser user) {
+		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
+			return restService.validate(user);
+		}
+		else
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+						    
+	}
+	@RequestMapping(value = "/validateAccountId", method = RequestMethod.POST)
+	public ResponseEntity<JsonUser> validateAccountId(@RequestBody  JsonUser user) {
+		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
+			return restService.validateAccountId(user);
+		}
+		else
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
+						    
+	}
+	
 	@RequestMapping(value = "/cashWithdraw", method = RequestMethod.POST)
 	public ResponseEntity<JsonUser> cashWithdraw(@RequestBody  JsonUser user) {
 		HttpStatus httpstatus;
@@ -44,16 +62,25 @@ public class BNK4RestController {
 			return restService.cashWithdraw(user);
 		}
 		else
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
 
 	}
-	@RequestMapping(value = "/viewBal", method = RequestMethod.POST)
+	@RequestMapping(value = "/viewBal", method = RequestMethod.POST,headers="Accept=application/json")
 	public ResponseEntity<JsonUser> viewBal(@RequestBody  JsonUser user) {
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.viewBal(user);
 		}
 		else
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
+
+	}
+	@RequestMapping(value = "/viewBal", method = RequestMethod.GET,headers="Accept=application/json")
+	public ResponseEntity<JsonUser> getviewBal(@RequestBody  JsonUser user) {
+		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
+			return restService.viewBal(user);
+		}
+		else
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
 
 	}
 	@RequestMapping(value = "/readTxn", method = RequestMethod.POST)
@@ -63,7 +90,7 @@ public class BNK4RestController {
 			return restService.readTxn(user);
 		}
 		else
-			return new ResponseEntity<List<JsonTxnDtls>> (jsonTxnDtlsList,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<JsonTxnDtls>> (jsonTxnDtlsList,HttpStatus.NOT_FOUND); //404 status code
 		
 	}
 

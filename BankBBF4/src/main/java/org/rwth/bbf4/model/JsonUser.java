@@ -1,10 +1,12 @@
 package org.rwth.bbf4.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties
 public class JsonUser {
 	private String cardNumber;
 	private String pin;
 	private double amount;
-	private String methodName;
 	public String getCardNumber() {
 		return cardNumber;
 	}
@@ -22,12 +24,6 @@ public class JsonUser {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
-	}
-	public String getMethodName() {
-		return methodName;
-	}
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
 	}
 	
 

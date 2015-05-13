@@ -8,13 +8,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -26,26 +33,26 @@ import org.springframework.web.servlet.view.JstlView;
 public class AppConfig extends WebMvcConfigurerAdapter{
 
 	@Bean(name = "sessionFactory")
-    public SessionFactory sessionFactory() {
-        LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource());
-        builder.scanPackages("org.rwth.bbf4.model").addProperties(getHibernateProperties());
+	public SessionFactory sessionFactory() {
+		LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(dataSource());
+		builder.scanPackages("org.rwth.bbf4.model").addProperties(getHibernateProperties());
 
-        return builder.buildSessionFactory();
-    }
+		return builder.buildSessionFactory();
+	}
 
 	private Properties getHibernateProperties() {
-        Properties prop = new Properties();
-        prop.put("hibernate.format_sql", "true");
-        prop.put("hibernate.show_sql", "true");
-        prop.put("hibernate.hbm2ddl.auto", "update");
-        prop.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        return prop;
-    }
-	
+		Properties prop = new Properties();
+		prop.put("hibernate.format_sql", "true");
+		prop.put("hibernate.show_sql", "true");
+		prop.put("hibernate.hbm2ddl.auto", "update");
+		prop.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+		return prop;
+	}
+
 	@Bean(name = "dataSource")
 	public DriverManagerDataSource dataSource() {
-		 DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-		
+		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+
 		BasicDataSource ds = new BasicDataSource();
 		driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/bank4_db");
@@ -53,12 +60,12 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 		driverManagerDataSource.setPassword("P@ssbbf4_dba");
 		return driverManagerDataSource;
 	}
-	
+
 	@Bean
-    public HibernateTransactionManager txManager() {
-        return new HibernateTransactionManager(sessionFactory());
-    }
-		
+	public HibernateTransactionManager txManager() {
+		return new HibernateTransactionManager(sessionFactory());
+	}
+
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -69,12 +76,14 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	}
 	@Override
 	public void configureDefaultServletHandling(
-	DefaultServletHandlerConfigurer configurer) {
-	configurer.enable();
+			DefaultServletHandlerConfigurer configurer) {
+		configurer.enable();
 	}
 	@Bean(name = "successHandler")
 	public BBF4AuthenticationSuccessHandler getSuccessHandler(){
 		return new BBF4AuthenticationSuccessHandler();
 	}
 	
+	  
+
 }

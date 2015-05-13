@@ -2,6 +2,8 @@ package org.rwth.bbf4.model;
 
 import java.sql.Timestamp;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+@JsonIgnoreProperties
 public class JsonTxnDtls {
 	private Timestamp execDate;
 	private double amount;
