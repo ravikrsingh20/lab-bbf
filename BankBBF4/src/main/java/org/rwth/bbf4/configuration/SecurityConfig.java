@@ -32,11 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
  
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
- 
-	  http.authorizeRequests()	
+		
+	  http.authorizeRequests()		  		
+		.antMatchers("/bbf4/","/bbf4/atm/**","/bbf4/login/**","/bbf4/register/**","/resources/**").permitAll()	
 		.antMatchers("/bbf4/emp/**").access("hasRole('EMPL') or hasRole('ADMN')")
-		.antMatchers("/bbf4/onln/**").access("hasRole('CUST')")
-		.antMatchers("/bbf4/atm/**","/bbf4/login/**","/bbf4/register/**","/resources/**").permitAll()		
+		.antMatchers("/bbf4/onln/**").access("hasRole('CUST')")	
+		.anyRequest().authenticated()
 		.and()
 		  .formLogin().loginPage("/login").successHandler(successHandler).failureUrl("/login?error")
 		  .usernameParameter("username").passwordParameter("password")

@@ -91,8 +91,7 @@ public class AtmBnkController {
 	public String postReadTxnLog(@ModelAttribute("UserAccount") @Valid UserAccount useraccount, BindingResult result, Errors errors,Model model) {
 
 		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();	
-		UserAccount ua = new UserAccount();
-		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
+		UserAccount ua = new UserAccount();		
 		// checks msg if there is some error msg like pin doesnot match
 		if (useraccount.getAtmpin().length() != 4){
 			ua.setMsg("Enter 4 digit atm pin");
@@ -106,6 +105,8 @@ public class AtmBnkController {
 			model.addAttribute("UserAccount", ua );
 			return "readtxnlogpage";
 		}
+		//get log
+		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
 		if (useraccount.getMsg().equals("OK")) {
 			model.addAttribute("TxnDtlsList", txndtlslist );
 			model.addAttribute("UserAccount", useraccount );

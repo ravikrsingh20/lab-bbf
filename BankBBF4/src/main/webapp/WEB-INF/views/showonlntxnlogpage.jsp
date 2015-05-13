@@ -11,7 +11,7 @@
 	<%@ include file="header.jsp"%>
 	<h1>
 		Transaction log for Account :
-		<c:out value="${userAccount.acntid}" />
+		<c:out value="${UserAccount.acntid}" />
 	</h1>
 	<div>
 		<table align="center">

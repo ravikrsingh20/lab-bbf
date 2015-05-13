@@ -88,6 +88,8 @@ public class OnlineServiceImpl implements OnlineService{
 			else{
 				txndtls.setMsg("Error!! Not Enough Balance in account");
 			}
+		}else {
+			// outside bank case
 		}
 			
 
@@ -168,7 +170,8 @@ public class OnlineServiceImpl implements OnlineService{
 				if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
 					msg += " Bank 2 Bank Transaction.";
 					msg += " " + txnDtlsTmp.getTxnamt();
-				}				
+				}	
+				msg += " Status : "+txnDtlsTmp.getTxnstat();
 				txnDtlsret.setMsg(msg);
 				txndtlsListret.add(txnDtlsret);
 

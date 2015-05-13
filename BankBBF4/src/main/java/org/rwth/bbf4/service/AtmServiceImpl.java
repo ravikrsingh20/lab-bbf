@@ -164,7 +164,8 @@ public class AtmServiceImpl implements AtmService {
 					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
 						msg += " Bank 2 Bank Transaction.";
 						msg += " " + txnDtlsTmp.getTxnamt();
-					}				
+					}
+					msg += " Status : "+txnDtlsTmp.getTxnstat();
 					txnDtlsret.setMsg(msg);
 					txndtlsListret.add(txnDtlsret);
 					
