@@ -1,6 +1,5 @@
 package org.rwth.bbf4.model;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
 public class JsonUser {

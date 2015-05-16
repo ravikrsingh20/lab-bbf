@@ -10,12 +10,22 @@ import org.rwth.bbf4.dao.CashDetailsDao;
 import org.rwth.bbf4.dao.TxnDtlsDao;
 import org.rwth.bbf4.dao.UserAccountDao;
 import org.rwth.bbf4.model.CashDetails;
+import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service("atmService")
@@ -100,10 +110,53 @@ public class AtmServiceImpl implements AtmService {
 
 			}
 
-		}else {
-			// call web service of other bank to facilitate cash withdrawl of foreign bank atms
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
+			// call web service of other bank to facilitate cash withdrawl of foreign bank atms			
 			RestTemplate restTemplate = new RestTemplate();
+			JsonUser user = new JsonUser();
+			user.setCardNumber(useraccount.getAcntid());
+			user.setPin(useraccount.getAtmpin());
+			user.setAmount(useraccount.getAmt());
+			//JsonUser userReturn = new JsonUser();
+			try{
+				ResponseEntity<JsonUser> userReturn;
+				userReturn= restTemplate.postForEntity("http://localhost:8950/bbf4/validate/cashWithdraw", user, JsonUser.class);
+			}catch (final HttpClientErrorException e) {
+		        System.out.println(e.getStatusCode());
+		        System.out.println(e.getResponseBodyAsString());
+		    }
+		} else if (useraccount.getBnkname().equals("BANK2")){
+			RestTemplate restTemplate = new RestTemplate();
+					
+			JsonUser user = new JsonUser();
+			user.setCardNumber(useraccount.getAcntid());
+			user.setPin(useraccount.getAtmpin());
+			user.setAmount(useraccount.getAmt());
+			
+			try{
+				JsonUser user_ret = restTemplate.postForObject("http://localhost:8950/bbf4/validate/cashwithdraw", user, JsonUser.class);
+			}catch (final HttpClientErrorException e) {
+		        System.out.println(e.getStatusCode());
+		        System.out.println(e.getResponseBodyAsString());
+		    }
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
+			   RestTemplate rt = new RestTemplate();
+	                 JsonUser user = new JsonUser();
+				user.setCardNumber(useraccount.getAcntid());
+				user.setPin(useraccount.getAtmpin());
+				user.setAmount(useraccount.getAmt());
+				HttpHeaders h = new HttpHeaders();
+	            
+	            
+	            ResponseEntity<JsonUser> user_ret = rt.getForEntity("http://localhost:8950/bbf4/validate/cashwithdraw", JsonUser.class,user );
+	             
+	            // Send the request as PUT
+	           // ResponseEntity<String> result = restTemplate.exchange("http://localhost:8080/spring-rest-provider/krams/person/{id}", HttpMethod.PUT, entity, String.class, id);
+	           
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK5")){
+			  
 		}
+		
 
 
 		return useraccount;
