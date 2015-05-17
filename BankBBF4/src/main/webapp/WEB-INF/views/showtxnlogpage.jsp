@@ -30,7 +30,11 @@
 					<td><c:out value="${txnDtls.msg}" /></td>
 				</tr>
 			</c:forEach>
-
+	<tr>
+				<td colspan="4" align = "center"><font color="white" size="5px"> <a
+						href="/bbf4/atmbank"><font color="white">
+								Back to Atm Page</font></a></font></td>
+			</tr>
 
 		</table>
 	</div>

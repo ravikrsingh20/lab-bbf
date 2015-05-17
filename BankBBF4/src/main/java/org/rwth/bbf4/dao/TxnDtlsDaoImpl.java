@@ -34,5 +34,12 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 		
 	}
 	
-
+	@Override
+	public List<TxnDtls> getTxnDtlsbytxntyp(String acntid,String txntyp) {
+		// TODO Auto-generated method stub
+		return (List<TxnDtls>) getSession()
+				.getNamedQuery("getTxnDtlsByAcntIdandTxnType").setString("txntyp", txntyp).setString("acntid", acntid).list();
+				
+		
+	}
 }

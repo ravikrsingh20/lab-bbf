@@ -32,7 +32,7 @@
 			</c:forEach>
 			<tr>
 				<td colspan="4" align = "center"><font color="white" size="5px"> <a
-						href="/bbf4/onln"><font color="white">
+						href="/bbf4/login"><font color="white">
 								Back to Online Banking</font></a></font></td>
 			</tr>
 

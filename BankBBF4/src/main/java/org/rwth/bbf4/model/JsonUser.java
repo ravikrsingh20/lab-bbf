@@ -1,8 +1,12 @@
 package org.rwth.bbf4.model;
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties
-public class JsonUser {
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class JsonUser implements Serializable{
+	private static final long serialVersionUID = -8039686696076337053L;
 	private String cardNumber;
 	private String pin;
 	private double amount;
@@ -25,5 +29,4 @@ public class JsonUser {
 		this.amount = amount;
 	}
 	
-
 }

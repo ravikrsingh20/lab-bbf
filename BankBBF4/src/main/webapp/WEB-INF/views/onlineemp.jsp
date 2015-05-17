@@ -37,8 +37,8 @@
 				<td>
 					<div class="boxhead">
 						<div class="modern1">
-							<font color="white" size="5px"> <a href="/bbf4/atmbank/trnsmnyb2b"><font
-									color="white">Transfer money from Bank to Bank</font></a></font>
+							<font color="white" size="5px"> <a href="/bbf4/atmbank/lndmny"><font
+									color="white">View Bank Cash Details</font></a></font>
 						</div>
 					</div>
 				</td>

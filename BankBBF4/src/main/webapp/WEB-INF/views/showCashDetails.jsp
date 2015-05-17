@@ -16,24 +16,25 @@
 	<div>
 		<table align="center">
 			<tr>
-				<td align="center">Transaction Id</td>
-				<td align="center">Execution Date</td>
+				<td align="center">Id</td>
+				<td align="center">Account Id</td>
+				<td align="center">Bank Name</td>
 				<td align="center">Amount</td>
-				<td align="center">Message</td>
+				
 			</tr>
 
-			<c:forEach items="${TxnDtlsList}" var="txnDtls">
+			<c:forEach items="${CashDetailsList}" var="cdtls">
 				<tr>
-					<td><c:out value="${txnDtls.txnid}" /></td>
-					<td><c:out value="${txnDtls.execdt}" /></td>
-					<td><c:out value="${txnDtls.txnamt}" /></td>
-					<td><c:out value="${txnDtls.msg}" /></td>
+					<td><c:out value="${cdtls.id}" /></td>
+					<td><c:out value="${cdtls.acntId}" /></td>
+					<td><c:out value="${cdtls.bnkNm}" /></td>
+					<td><c:out value="${txnDtls.amount}" /></td>
 				</tr>
 			</c:forEach>
 			<tr>
 				<td colspan="4" align = "center"><font color="white" size="5px"> <a
-						href="/bbf4/onln"><font color="white">
-								Back to Online Banking</font></a></font></td>
+						href="/bbf4/emp"><font color="white">
+								Back to employee Page</font></a></font></td>
 			</tr>
 
 		</table>

@@ -19,7 +19,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "TXN_DTLS")
-@NamedQueries({ @NamedQuery(name = "getTxnDtlsByAcntId", query = "from TxnDtls txn where txn.txnacntid = :acntid ORDER BY txn.execdt desc" )})
+@NamedQueries({ @NamedQuery(name = "getTxnDtlsByAcntId", query = "from TxnDtls txn where txn.txnacntid = :acntid ORDER BY txn.execdt desc" ), @NamedQuery(name = "getTxnDtlsByAcntIdandTxnTyp", query = "from TxnDtls txn where txn.txnacntid = :acntid AND txn.txntyp= :txntyp ORDER BY txn.execdt desc" )})
 public class TxnDtls {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

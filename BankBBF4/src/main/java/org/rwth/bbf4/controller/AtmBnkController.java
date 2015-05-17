@@ -1,10 +1,7 @@
 package org.rwth.bbf4.controller;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.Valid;
 
@@ -21,7 +18,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Handles requests for the ATM banking.
@@ -43,7 +39,7 @@ public class AtmBnkController {
 
 		return "atmpage";
 	}
-
+	
 	@RequestMapping(value = "/atmbank/cashwithdrawl", method = RequestMethod.GET)
 	public String getWithdrawCash(Model model) {
 		model.addAttribute("UserAccount",new UserAccount());

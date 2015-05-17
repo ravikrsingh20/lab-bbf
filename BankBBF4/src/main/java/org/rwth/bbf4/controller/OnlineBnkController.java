@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rwth.bbf4.model.CashDetails;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.rwth.bbf4.service.OnlineService;
@@ -103,14 +104,56 @@ public class OnlineBnkController {
 	}
 	// allow only admin to do so
 	@RequestMapping(value = "/emp/lndmny", method = RequestMethod.GET)
-	public String lendMoney2Bank(Model model) {
-				
-		return "onlineemp";
+	public String lendMoney2BankGet(Model model,Principal principal,@ModelAttribute("TxnDtls") TxnDtls txndtls) {
+		
+		return "lendmoney2bankscs";
+	}
+	@RequestMapping(value = "/emp/lndmny", method = RequestMethod.POST)
+	public String lendMoney2BankPost(Model model,Principal principal,@ModelAttribute("UserAccount") UserAccount useraccount) {
+		TxnDtls txndtls = new TxnDtls();
+		useraccount.setAcntid(principal.getName());		
+		if(useraccount.getAmt() > 0)
+			txndtls = onlnService.lendMoney2Bank(useraccount);
+		else
+			txndtls.setMsg("Please enter some amount to tranfer");
+		model.addAttribute("TxnDtls", txndtls );
+		
+		return "lendmoney2bankscs";
 	}
 	@RequestMapping(value = "/emp/viewatmlog", method = RequestMethod.GET)
-	public String viewAtmLog( Model model) {
+	public String viewAtmLogGet( Model model,Principal principal) {
+				
+		return "showempatmlog";
+	}
+	@RequestMapping(value = "/emp/viewatmlog", method = RequestMethod.POST)
+	public String viewAtmLogPost( Model model,Principal principal,@ModelAttribute("UserAccount") UserAccount useraccount) {
+		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();	
+		
+		useraccount.setAcntid(principal.getName());
+		txndtlslist = onlnService.getTxnDtlsB2B(useraccount);
+		// checks msg if there is some error msg like pin doesnot match
+				
+		if (useraccount.getMsg().equals("OK")) {
+			model.addAttribute("TxnDtlsList", txndtlslist );
+			model.addAttribute("UserAccount", useraccount );
+			return "empatmlog";
+		}			
+		else{
+			model.addAttribute("UserAccount", useraccount );
+			return "onlinecust"; 
+		}
+	}
+	//admin
+	@RequestMapping(value = "/emp/viewbnkmoney", method = RequestMethod.GET)
+	public String viewBnkMoney( Model model,Principal principal,@ModelAttribute("UserAccount") UserAccount useraccount) {
+		useraccount.setAcntid(principal.getName());
+		List<CashDetails> cdlist = new ArrayList<CashDetails>();
+		cdlist = onlnService.getCashDetails(useraccount);
+		if(useraccount.getMsg().equals("OK")){
+			model.addAttribute("CashDetailsList", cdlist );
+			return "showCashDetails.jsp";
+		}
 				
 		return "onlineemp";
 	}
-	
 }

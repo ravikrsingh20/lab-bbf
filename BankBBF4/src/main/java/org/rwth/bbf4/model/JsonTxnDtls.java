@@ -1,10 +1,14 @@
 package org.rwth.bbf4.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-@JsonIgnoreProperties
-public class JsonTxnDtls {
+
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class JsonTxnDtls implements Serializable {
+	private static final long serialVersionUID = -8039686696076337052L;
 	private Timestamp execDate;
 	private double amount;
 	private String message;
@@ -26,5 +30,5 @@ public class JsonTxnDtls {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
+	
 }

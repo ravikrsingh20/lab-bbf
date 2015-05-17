@@ -3,9 +3,6 @@ package org.rwth.bbf4.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
