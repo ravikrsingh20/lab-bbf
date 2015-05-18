@@ -3,6 +3,8 @@ package org.rwth.bbf4.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.rwth.bbf4.model.JsonTxnDtls;
 import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.service.RestService;
@@ -40,6 +42,7 @@ public class BNK4RestController {
 	@RequestMapping(value="/validate",method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> validate(@RequestBody  JsonUser user) {
+		  //JsonUser user = new JsonUser();
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.validate(user);
 		}
@@ -72,7 +75,7 @@ public class BNK4RestController {
 
 	}	
 	
-	@RequestMapping(value = "/validate/viewBal", method = RequestMethod.POST)
+	@RequestMapping(value = "/validate/viewBal", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> viewBal(@RequestBody  JsonUser user) {
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
@@ -83,7 +86,7 @@ public class BNK4RestController {
 
 	}
 
-	@RequestMapping(value = "/validate/readTxn", method = RequestMethod.POST)
+	@RequestMapping(value = "/validate/readTxn", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<List<JsonTxnDtls>> readTxn(@RequestBody JsonUser user) {
 		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
@@ -94,7 +97,7 @@ public class BNK4RestController {
 			return new ResponseEntity<List<JsonTxnDtls>> (jsonTxnDtlsList,HttpStatus.NOT_FOUND); //404 status code
 
 	}
-	@RequestMapping(value = "/validate/plcwrtrns", method = RequestMethod.POST)
+	@RequestMapping(value = "/validate/plcwrtrns", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> placeWireTransfer(@RequestBody JsonUser user) {
 		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();

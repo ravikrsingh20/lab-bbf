@@ -50,9 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.and()
 //		.requiresChannel().antMatchers("/**").requiresSecure()
 		.and()		
-		.csrf()
-		.and()
-		.sessionManagement().maximumSessions( 1 );
+		.csrf().disable()
+//		.and()
+//		.sessionManagement().maximumSessions( 1 )
+		;
 	}
 	@Bean
 	public PasswordEncoder passwordEncoder(){

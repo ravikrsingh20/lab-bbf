@@ -140,7 +140,7 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist == null){
+		if(ualist != null){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -186,7 +186,7 @@ public class RestServiceImpl implements RestService {
 
 				}
 
-				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.NO_CONTENT);//204 No content as asked by anton not 200 OK			
+				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.OK);//204 No content as asked by anton not 200 OK			
 
 			}
 			else {
@@ -203,11 +203,11 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validate(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
+		if(ualist != null){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
-				return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NO_CONTENT); //200
 
 			}
 			else
@@ -221,7 +221,7 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(!(ualist.equals(null))){
+		if(ualist != null){
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
 		}
 		else 
