@@ -66,6 +66,10 @@ public class AccountController {
 			model.addAttribute("userAccount", ua);
 		return "regsuccess";
 	}
-
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public String accessdenied(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		return "403";
+	}
 
 }

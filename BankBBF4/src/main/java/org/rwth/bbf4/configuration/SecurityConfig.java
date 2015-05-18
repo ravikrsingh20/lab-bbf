@@ -36,8 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()				
 		//.antMatchers("/validate/**").access("hasIpAddress('137.226.112.105') or hasIpAddress('137.226.112.104') or hasIpAddress('137.226.112.106') or hasIpAddress('137.226.112.108') or hasIpAddress('137.226.112.109') or  hasIpAddress('137.226.112.110') or hasIpAddress('137.226.112.92')  or hasIpAddress('137.226.112.92')")
-		.antMatchers("/bbf4/emp/**").access("hasRole('EMPL') or hasRole('ADMN')")
-		.antMatchers("/bbf4/onln/**").access("hasRole('CUST')")		
+		.antMatchers("/emp/**").hasAnyAuthority("EMPL","ADMN")
+		.antMatchers("/onln/**").hasAuthority("CUST")
 		.antMatchers("/","/atmbank/**","/login/**","/logout/**","/register/**","/resources/**","/validate/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
