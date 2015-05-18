@@ -10,5 +10,6 @@ public interface TxnDtlsDao extends Dao<TxnDtls>{
 	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount);
 	public List<TxnDtls> getTxnDtlsAtm(UserAccount useraccount);
 	public List<TxnDtls> getTxnDtlsbytxntyp(String acntid,String txntyp);
+	public List<TxnDtls> getTxnDtlsbyAtmNm(String atmName,String txntyp);
 
 }

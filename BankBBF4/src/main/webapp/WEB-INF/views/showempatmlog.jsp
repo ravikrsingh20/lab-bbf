@@ -10,34 +10,34 @@
 <body>
 	<%@ include file="header.jsp"%>
 	<h1>
-		Transaction log for Account :
-		<c:out value="${UserAccount.acntid}" />
+		Select ATM for Transaction log :
+		
+		<c:out value="${UserAccount.msg}" />
 	</h1>
 	<div>
-		<table align="center">
-			<tr>
-				<td align="center">Transaction Id</td>
-				<td align="center">Execution Date</td>
-				<td align="center">Amount</td>
-				<td align="center">Message</td>
-			</tr>
-
-			<c:forEach items="${TxnDtlsList}" var="txnDtls">
+		<sf:form method="POST" commandName="UserAccount" action="/bbf4/emp/viewatmlog">
+			<table align="center">				
+				
 				<tr>
-					<td><c:out value="${txnDtls.txnid}" /></td>
-					<td><c:out value="${txnDtls.execdt}" /></td>
-					<td><c:out value="${txnDtls.txnamt}" /></td>
-					<td><c:out value="${txnDtls.msg}" /></td>
+					<td><sf:label path="atmname" cssErrorClass="error">Select Atm </sf:label>:
+					<td><sf:select path="atmname">
+							<sf:option value="ATM1">Atm 1</sf:option>
+							<sf:option value="ATM2">Atm 2</sf:option>
+							<sf:option value="ATM3">Atm 3</sf:option>
+							
+						</sf:select></td>
 				</tr>
-			</c:forEach>
-			<tr>
-				<td colspan="4" align = "center"><font color="white" size="5px"> <a
-						href="/bbf4/login"><font color="white">
-								Back to Online Banking</font></a></font></td>
-			</tr>
+				
+				<tr>
+				<td colspan="2" align="center"><input type="submit"
+						value="Request Transaction Log" /></td>
+					
+				</tr>
 
-		</table>
+			</table>
+		</sf:form>
 	</div>
+	
 	<%@ include file="footer.jsp"%>
 </body>
 

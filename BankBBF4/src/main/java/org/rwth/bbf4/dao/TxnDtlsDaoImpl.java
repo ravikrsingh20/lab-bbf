@@ -42,4 +42,11 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 				
 		
 	}
+
+	@Override
+	public List<TxnDtls> getTxnDtlsbyAtmNm(String atmName, String txntyp) {
+		// TODO Auto-generated method stub
+		return (List<TxnDtls>) getSession().createQuery("from TxnDtls txn where atmname = :atmname and txntyp = :txntyp").setParameter("atmname", atmName).setParameter("txntyp", txntyp).list();
+				
+	}
 }

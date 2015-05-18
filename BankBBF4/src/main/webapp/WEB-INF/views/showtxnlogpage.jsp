@@ -11,7 +11,8 @@
 	<%@ include file="header.jsp"%>
 	<h1>
 		Transaction log for Account :
-		<c:out value="${UserAccount.acntid}" />
+		<c:out value="${UserAccount.acntid}" /><br>
+		Current Balance is <c:out value="${UserAccount.balance}" />
 	</h1>
 	<div>
 		<table align="center">

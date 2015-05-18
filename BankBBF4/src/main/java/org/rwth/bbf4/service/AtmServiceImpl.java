@@ -14,7 +14,6 @@ import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,9 +64,7 @@ public class AtmServiceImpl implements AtmService {
 						txnDtls.setExecdt(new Timestamp(date.getTime()));
 						txnDtls.setOrddt(new Timestamp(date.getTime()));
 						txnDtls.setTxnamt(useraccount.getAmt());
-						//txnDtls.setTxncracntid(txncracntid); no cr 
-						//txnDtls.setTxncrbnknm();txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm()
-						txnDtls.setTxncrdracntid(useraccount.getAtmname());
+						txnDtls.setTxncrdracntid(cashDetails.getAcntId());
 						txnDtls.setTxncrdrbnknm(useraccount.getBnkname());
 						txnDtls.setTxnacntid(ua.getAcntid());
 						txnDtls.setTxnflg("DR");
@@ -104,7 +101,7 @@ public class AtmServiceImpl implements AtmService {
 
 			}
 
-		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
 			// call web service of other bank to facilitate cash withdrawl of foreign bank atms			
 			RestTemplate restTemplate = new RestTemplate();
 			JsonUser user = new JsonUser();
@@ -119,35 +116,21 @@ public class AtmServiceImpl implements AtmService {
 		        System.out.println(e.getStatusCode());
 		        System.out.println(e.getResponseBodyAsString());
 		    }
-		} else if (useraccount.getBnkname().equals("BANK2")){
-			RestTemplate restTemplate = new RestTemplate();
-					
-			JsonUser user = new JsonUser();
-			user.setCardNumber(useraccount.getAcntid());
-			user.setPin(useraccount.getAtmpin());
-			user.setAmount(useraccount.getAmt());
 			
-			try{
-				JsonUser user_ret = restTemplate.postForObject("http://localhost:8950/bbf4/validate/cashwithdraw", user, JsonUser.class);
-			}catch (final HttpClientErrorException e) {
-		        System.out.println(e.getStatusCode());
-		        System.out.println(e.getResponseBodyAsString());
-		    }
-		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
-			   RestTemplate rt = new RestTemplate();
-	                 JsonUser user = new JsonUser();
-				user.setCardNumber(useraccount.getAcntid());
-				user.setPin(useraccount.getAtmpin());
-				user.setAmount(useraccount.getAmt());
-				HttpHeaders h = new HttpHeaders();
-	            
-	            
-	            ResponseEntity<JsonUser> user_ret = rt.getForEntity("http://localhost:8950/bbf4/validate/cashwithdraw", JsonUser.class,user );
-	             
-	            // Send the request as PUT
-	           // ResponseEntity<String> result = restTemplate.exchange("http://localhost:8080/spring-rest-provider/krams/person/{id}", HttpMethod.PUT, entity, String.class, id);
-	           
+		//	Update cash details for that particular bank and create one entry in transaction with type B2B
+		} else if (useraccount.getBnkname().equals("BANK2")){
+			
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
+			
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK5")){
+			  
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK6")){
+			
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK7")){
+			  
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK8")){
+			
+		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK9")){
 			  
 		}
 		
@@ -206,7 +189,7 @@ public class AtmServiceImpl implements AtmService {
 							msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 					}
 						
@@ -217,6 +200,7 @@ public class AtmServiceImpl implements AtmService {
 					msg += " Status : "+txnDtlsTmp.getTxnstat();
 					txnDtlsret.setMsg(msg);
 					txndtlsListret.add(txnDtlsret);
+					useraccount.setBalance(ua.getBalance());
 					
 				}
 				useraccount.setMsg("OK");
@@ -251,7 +235,5 @@ public class AtmServiceImpl implements AtmService {
 		}
 		return useraccount;
 	}
-
-
-
+	
 }

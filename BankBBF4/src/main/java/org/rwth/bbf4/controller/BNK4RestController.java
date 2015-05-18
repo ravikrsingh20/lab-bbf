@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
-@RequestMapping(value="/validate")
+@Controller
 public class BNK4RestController {
 	private static final Logger logger = LoggerFactory.getLogger(BNK4RestController.class);
 
@@ -27,7 +27,8 @@ public class BNK4RestController {
 	{
 		System.out.println("BNK4RestController initiated");
 	}
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value="/validate",method = RequestMethod.GET,produces = "application/json")
+	@ResponseBody
 	public ResponseEntity<JsonUser> getvalidate() {
 		JsonUser user = new JsonUser();
 		user.setCardNumber("BNK400000003");
@@ -36,18 +37,19 @@ public class BNK4RestController {
 		return new ResponseEntity<JsonUser>(user,HttpStatus.OK);
 
 	}
-
-	@RequestMapping(value = "/validate", method = RequestMethod.POST)
+	@RequestMapping(value="/validate",method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
+	@ResponseBody
 	public ResponseEntity<JsonUser> validate(@RequestBody  JsonUser user) {
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.validate(user);
 		}
 		else
-			return new ResponseEntity<JsonUser>(user,HttpStatus.OK);
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
 
 	}
 
-	@RequestMapping(value = "/validateAccountId", method = RequestMethod.POST)
+	@RequestMapping(value = "/validate/validateAccountId", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
+	@ResponseBody
 	public ResponseEntity<JsonUser> validateAccountId(@RequestBody  JsonUser user) {
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.validateAccountId(user);
@@ -57,9 +59,11 @@ public class BNK4RestController {
 
 	}
 
-	@RequestMapping(value = "/cashWithdraw", method = RequestMethod.POST)
-	public ResponseEntity<JsonUser> cashWithdraw(String str) {
-		JsonUser user = new JsonUser();
+	@RequestMapping(value = "/validate/cashWithdraw", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
+	@ResponseBody
+	public ResponseEntity<JsonUser> cashWithdraw( @RequestBody JsonUser user) {
+		System.out.println(user.getCardNumber());
+		
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.cashWithdraw(user);
 		}
@@ -67,8 +71,9 @@ public class BNK4RestController {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
 
 	}	
-
-	@RequestMapping(value = "/viewBal", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "/validate/viewBal", method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<JsonUser> viewBal(@RequestBody  JsonUser user) {
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.viewBal(user);
@@ -78,7 +83,8 @@ public class BNK4RestController {
 
 	}
 
-	@RequestMapping(value = "/readTxn", method = RequestMethod.POST)
+	@RequestMapping(value = "/validate/readTxn", method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<List<JsonTxnDtls>> readTxn(@RequestBody JsonUser user) {
 		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
@@ -86,6 +92,27 @@ public class BNK4RestController {
 		}
 		else
 			return new ResponseEntity<List<JsonTxnDtls>> (jsonTxnDtlsList,HttpStatus.NOT_FOUND); //404 status code
+
+	}
+	@RequestMapping(value = "/validate/plcwrtrns", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<JsonUser> placeWireTransfer(@RequestBody JsonUser user) {
+		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
+		if(user.getDestAcntId().substring(0, 4).equals("BNK4")){
+			if(user.getAmount()>0){
+				return restService.plcwrtrnsfr(user);				
+			}
+			else{
+				user.setMsg("Please Give Some amount to credit");
+				return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code				
+			}
+			
+		}
+		else{
+			user.setMsg("Account is not of our Bank");
+			return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code
+		}
+			
 
 	}
 

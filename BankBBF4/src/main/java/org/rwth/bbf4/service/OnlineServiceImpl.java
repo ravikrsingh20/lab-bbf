@@ -90,6 +90,9 @@ public class OnlineServiceImpl implements OnlineService{
 			}
 		}else {
 			// outside bank case
+			// create one entry in txn dtls with type b2b for cr leg and add the amount to cash details
+			//also call web service with account detail to send money to particular customer in foreign bank
+
 		}
 
 
@@ -163,7 +166,7 @@ public class OnlineServiceImpl implements OnlineService{
 						msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 					}
 					if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-						msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 					}
 				}
 
@@ -174,6 +177,7 @@ public class OnlineServiceImpl implements OnlineService{
 				msg += " Status : "+txnDtlsTmp.getTxnstat();
 				txnDtlsret.setMsg(msg);
 				txndtlsListret.add(txnDtlsret);
+				useraccount.setBalance(ua.getBalance());
 
 			}
 			useraccount.setMsg("OK");
@@ -207,58 +211,58 @@ public class OnlineServiceImpl implements OnlineService{
 				List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
 				ua = ualist.get(0);
 				txndtlsList = txnDtlsDao.getTxnDtlsbytxntyp(useraccount.getAcntid(), "B2B");
-						// send only amount message (credit/debit from etc) exec date,
-						for (TxnDtls txnDtlsTmp : txndtlsList){
-							txnDtlsret = new  TxnDtls();
-							msg="";
-							txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
-							txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
-							txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
-							txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
-							// set message to be displayed
-							if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
-								msg += " Online Transaction.";
-								msg += " " + txnDtlsTmp.getTxnamt();
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-									msg += " Euro Credited to Your Account from Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-									msg += " Euro Debited from Your Account to Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-							}
-
-							if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ATM")){
-								msg += " ATM Transaction.";
-								msg += " " + txnDtlsTmp.getTxnamt();
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-									msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-									msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-							}
-
-							if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
-								msg += " Bank 2 Bank Transaction.";
-								msg += " Amount :" + txnDtlsTmp.getTxnamt();
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-									msg += " Euro Credited to Bank Account from  : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-								if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-									msg += " Euro Debited from Bank Account To : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-								}
-							}				
-							txnDtlsret.setMsg(msg);
-							txndtlsListret.add(txnDtlsret);
-
+				// send only amount message (credit/debit from etc) exec date,
+				for (TxnDtls txnDtlsTmp : txndtlsList){
+					txnDtlsret = new  TxnDtls();
+					msg="";
+					txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
+					txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
+					txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
+					txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
+					// set message to be displayed
+					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
+						msg += " Online Transaction.";
+						msg += " " + txnDtlsTmp.getTxnamt();
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+							msg += " Euro Credited to Your Account from Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+							msg += " Euro Debited from Your Account to Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+					}
+
+					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ATM")){
+						msg += " ATM Transaction.";
+						msg += " " + txnDtlsTmp.getTxnamt();
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+							msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+					}
+
+					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
+						msg += " Bank 2 Bank Transaction.";
+						msg += " Amount :" + txnDtlsTmp.getTxnamt();
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+							msg += " Euro Credited to Bank Account from  : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+							msg += " Euro Debited from Bank Account To : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+					}				
+					txnDtlsret.setMsg(msg);
+					txndtlsListret.add(txnDtlsret);
+
+				}
 				useraccount.setMsg("OK");
 				return txndtlsListret;	
 			}
 		}		
 		return txndtlsListret;
 	}
-	
+
 	@Override
 	public TxnDtls lendMoney2Bank(UserAccount useraccount) {
 		// TODO Auto-generated method stub
@@ -306,27 +310,25 @@ public class OnlineServiceImpl implements OnlineService{
 					cdSrc.setAmount(cdSrc.getAmount()-useraccount.getAmt());
 					cdDest.setAmount(cdDest.getAmount()-useraccount.getAmt());
 
-
-					// our bank is debited
+					// create and entry for CR leg where other bank account is credited					
 					txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
 					txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
 					txnDtlstmpsrc.setTxnamt(useraccount.getAmt());
 					txnDtlstmpsrc.setTxncrdracntid(cdDest.getAcntId());
 					txnDtlstmpsrc.setTxncrdrbnknm(cdDest.getBankNm());
 					txnDtlstmpsrc.setTxnacntid(cdSrc.getAcntId());
-					txnDtlstmpsrc.setTxnflg("DR");
+					txnDtlstmpsrc.setTxnflg("CR");
 					txnDtlstmpsrc.setTxntyp("B2B");
 					txnDtlstmpsrc.setTxnstat("Processed");
 
-
-					// create and entry for CR leg where other bank account is credited
+					// our bank is debited
 					txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
 					txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
 					txnDtlstmpdest.setTxnamt(useraccount.getAmt());
 					txnDtlstmpdest.setTxncrdracntid(cdSrc.getAcntId());
 					txnDtlstmpdest.setTxncrdrbnknm(cdSrc.getBankNm());
 					txnDtlstmpdest.setTxnacntid(cdDest.getAcntId());
-					txnDtlstmpdest.setTxnflg("CR");
+					txnDtlstmpdest.setTxnflg("DR");
 					txnDtlstmpdest.setTxntyp("B2B");
 					txnDtlstmpdest.setTxnstat("Processed");
 
@@ -335,6 +337,7 @@ public class OnlineServiceImpl implements OnlineService{
 					txnDtlsDao.create(txnDtlstmpsrc);
 					txnDtlsDao.create(txnDtlstmpdest);
 					txndtls.setMsg("Wire Transfer Request completed successfully.");
+					//call other bank webservice to send money
 
 				}else {
 					txndtls.setMsg("We are bankrupt.");
@@ -358,16 +361,73 @@ public class OnlineServiceImpl implements OnlineService{
 			if(role.equalsIgnoreCase("ADMN")){				
 				useraccount.setMsg("OK");
 				return cashDetailsDao.findAll();
-				
+
 			}else{
 				useraccount.setMsg("Not logged in as admin");
-				
+
 			}
-			
+
 		} else{
 			useraccount.setMsg("Not logged in as admin");
 		}
 		return lstCashDtls_ret;
+	}
+	@Override
+	public List<TxnDtls> getTxnDtlsAtmEmp(UserAccount useraccount) {
+		// TODO Auto-generated method stub
+
+		List<TxnDtls>  txndtlsList = new ArrayList<TxnDtls>();
+		List<TxnDtls>  txndtlsListret = new ArrayList<TxnDtls>();
+		TxnDtls txnDtlsret;
+		String msg="";
+		//get below details only when the user is valid
+		// need to write a query to get txn dtls for particular bank acnt id and 
+
+		UserAccount ua  ;
+		TxnDtls txnDtls = new TxnDtls();
+		CashDetails cashDetails = new CashDetails();
+		java.util.Date date= new java.util.Date();
+		//	check if the user has sufficient privilege
+		String role = userAccountDao.getAccountRoleByAcntId(useraccount.getAcntid());
+		if(role.equalsIgnoreCase("EMPL") || role.equalsIgnoreCase("ADMN")){
+
+			if(useraccount.getAcntid().substring(0, 4).equals("BNK4")){
+				List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
+				ua = ualist.get(0);
+				txndtlsList = txnDtlsDao.getTxnDtlsbyAtmNm(useraccount.getAtmname(), "ATM");
+				// send only amount message (credit/debit from etc) exec date,
+				for (TxnDtls txnDtlsTmp : txndtlsList){
+					txnDtlsret = new  TxnDtls();
+					msg="";
+					txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
+					txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
+					txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
+					txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
+					// set message to be displayed
+					
+
+					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ATM")){
+						msg += " ATM Transaction.";
+						msg += " " + txnDtlsTmp.getTxnamt();
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+							msg += " Euro Credited to Account "+txnDtlsTmp.getTxnacntid()+" from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+							msg += " Euro Debited from  Account "+txnDtlsTmp.getTxnacntid()+" from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						}
+					}
+						
+					txnDtlsret.setMsg(msg);
+					txndtlsListret.add(txnDtlsret);
+				}
+				useraccount.setMsg("OK");
+				return txndtlsListret;	
+			}
+		}	
+		else {
+			useraccount.setMsg("Not Sufficient Privilege");
+		}
+		return txndtlsListret;
 	}
 
 }

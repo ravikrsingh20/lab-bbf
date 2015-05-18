@@ -55,7 +55,7 @@ public class BBF4AuthenticationSuccessHandler implements AuthenticationSuccessHa
             if (grantedAuthority.getAuthority().equals("CUST")) {
             	isCust = true;
                 break;
-            } else if (grantedAuthority.getAuthority().equals("ADMIN") || grantedAuthority.getAuthority().equals("EMPL")) {
+            } else if (grantedAuthority.getAuthority().equals("ADMN") || grantedAuthority.getAuthority().equals("EMPL")) {
                 isEmpl = true;
                 break;
             }

@@ -14,6 +14,7 @@ public interface OnlineService {
 	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount);
 	public List<TxnDtls> getTxnDtlsB2B(UserAccount useraccount);
 	public List<CashDetails> getCashDetails(UserAccount useraccount);
+	public List<TxnDtls> getTxnDtlsAtmEmp(UserAccount useraccount);
 	
 
 }

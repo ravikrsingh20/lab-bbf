@@ -16,9 +16,13 @@
 			<c:if test="${param.error != null}">
 				<p>Invalid username and password.</p>
 			</c:if>
+			<c:if test="${param.time > 1}">
+				<p>Maximum 1 session allowed.</p>
+			</c:if>
 			<c:if test="${param.logout != null}">
 				<p>You have been logged out.</p>
 			</c:if>
+			
 			<p>
 				<label for="username">IBAN No</label> <input type="text"
 					id="username" name="username" />

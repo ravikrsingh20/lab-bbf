@@ -5,13 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css"	href="<c:url value="/resources/css/style.css" />">
-<title>Transaction log</title>
+<title>Bank Cash Details </title>
 </head>
 <body>
 	<%@ include file="header.jsp"%>
 	<h1>
-		Transaction log for Account :
-		<c:out value="${UserAccount.acntid}" />
+		Cash Details for Bank 4 :
 	</h1>
 	<div>
 		<table align="center">
@@ -27,8 +26,8 @@
 				<tr>
 					<td><c:out value="${cdtls.id}" /></td>
 					<td><c:out value="${cdtls.acntId}" /></td>
-					<td><c:out value="${cdtls.bnkNm}" /></td>
-					<td><c:out value="${txnDtls.amount}" /></td>
+					<td><c:out value="${cdtls.bankNm}" /></td>
+					<td><c:out value="${cdtls.amount}" /></td>
 				</tr>
 			</c:forEach>
 			<tr>

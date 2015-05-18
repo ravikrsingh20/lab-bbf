@@ -172,7 +172,7 @@ public class RestServiceImpl implements RestService {
 							msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
 						}
 					}
 
@@ -186,7 +186,7 @@ public class RestServiceImpl implements RestService {
 
 				}
 
-				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.OK);//200			
+				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.NO_CONTENT);//204 No content as asked by anton not 200 OK			
 
 			}
 			else {
@@ -199,7 +199,7 @@ public class RestServiceImpl implements RestService {
 
 		return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.NOT_FOUND);//404
 	}
-
+	@Override
 	public ResponseEntity<JsonUser> validate(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
@@ -217,7 +217,7 @@ public class RestServiceImpl implements RestService {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
 
 	}
-
+	@Override
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
@@ -227,6 +227,62 @@ public class RestServiceImpl implements RestService {
 		else 
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
 
+
+	}
+	@Override
+	public ResponseEntity<JsonUser> plcwrtrnsfr(JsonUser user){
+
+		// TODO Auto-generated method stub
+		UserAccount uasrc = new UserAccount();
+		UserAccount uadest = new UserAccount();
+		java.util.Date date= new java.util.Date();
+		TxnDtls txnDtlstmpsrc = new TxnDtls();
+		TxnDtls txnDtlstmpdest = new TxnDtls();
+		CashDetails cashDetails = new CashDetails();
+
+		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getDestAcntId());
+		uasrc = ualist.get(0);
+		if (uasrc.equals(null)){
+			user.setMsg("Account is not of our bank");
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+
+		}else {
+			// create 2 entries in txn table for cr and dr
+			uasrc.setBalance(uasrc.getBalance() + user.getAmount());
+			userAccountDao.update(uasrc);			
+
+			// also create an entry in txn table
+			txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
+			txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
+			txnDtlstmpsrc.setTxnamt(user.getAmount());
+			txnDtlstmpsrc.setTxncrdracntid(user.getSrcAcntId());
+			txnDtlstmpsrc.setTxncrdrbnknm(user.getSrcBnkNm());
+			txnDtlstmpsrc.setTxnacntid(uasrc.getAcntid());
+			txnDtlstmpsrc.setTxnflg("CR");
+			txnDtlstmpsrc.setTxntyp("ONLN");
+			txnDtlstmpsrc.setTxnstat("Processed");
+			txnDtlsDao.create(txnDtlstmpsrc);
+
+			// update the bank account since we received money from other bank.
+			txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
+			txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
+			txnDtlstmpdest.setTxnamt(user.getAmount());
+			txnDtlstmpdest.setTxncrdracntid(uasrc.getAcntid());
+			txnDtlstmpdest.setTxncrdrbnknm(uasrc.getBnkname());
+			txnDtlstmpdest.setTxnacntid("BNK494000000");
+			txnDtlstmpdest.setTxnflg("CR");
+			txnDtlstmpdest.setTxntyp("ONLN");
+			txnDtlstmpdest.setTxnstat("Processed");
+			txnDtlsDao.create(txnDtlstmpdest);
+			//update cash details for Bank as amount is recieved in bank account
+			cashDetails = cashDetailsDao.get(104);
+			cashDetails.setAmount(cashDetails.getAmount() + user.getAmount());
+			cashDetailsDao.update(cashDetails);
+			
+			user.setMsg("Wire Transfer Request completed successfully.");
+			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 account not found
+
+		}
 
 	}
 
