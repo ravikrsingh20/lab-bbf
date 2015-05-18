@@ -14,13 +14,13 @@ Info about Tables description is given in DDL and DML scripts
 Belo are the Account username and password for admin and employee role
 Admin Accounts
 BNK490000001 - B@nk4P@ssAdm9#1
-BNK490000001 - B@nk4P@ssAdm9#2
-BNK490000001 - B@nk4P@ssAdm9#3
+BNK490000002 - B@nk4P@ssAdm9#2
+BNK490000003 - B@nk4P@ssAdm9#3
 
 Employee Accounts
 BNK494000001 - B@nk4P@ssEmp9#1
-BNK494000001 - B@nk4P@ssEmp9#2
-BNK494000001 - B@nk4P@ssEmp9#3
+BNK494000002 - B@nk4P@ssEmp9#2
+BNK494000003 - B@nk4P@ssEmp9#3
 
 Customer Account you can create by registering in the application . You can initially deposit amount to your account while registering, this will be your initial balance. Please deposit more amount so that you can test 
 all debit/credit properly.
