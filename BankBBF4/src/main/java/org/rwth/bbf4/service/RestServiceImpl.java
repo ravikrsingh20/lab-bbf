@@ -102,7 +102,8 @@ public class RestServiceImpl implements RestService {
 		if(ualist.equals(null)){
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404			
 		}
-		else {
+		else if (ualist.size()>0){
+			System.out.println("Ravi "+ualist.size());
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -111,10 +112,13 @@ public class RestServiceImpl implements RestService {
 			}
 			else
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401
-			
+		}else {
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404
 		}
-			
+
 	}
+
+
 	@Override
 	public ResponseEntity<List<JsonTxnDtls>> readTxn(JsonUser user) {
 		// TODO Auto-generated method stub
