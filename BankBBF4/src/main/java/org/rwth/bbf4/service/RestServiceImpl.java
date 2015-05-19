@@ -45,9 +45,8 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist				
-		} else {
+		if(ualist.size()>0){
+
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -72,9 +71,9 @@ public class RestServiceImpl implements RestService {
 					txnDtls.setTxnstat("Processed");
 
 					txnDtlsDao.create(txnDtls);
-					// update atm balance
-					cashDetails.setAmount(cashDetails.getAmount()-user.getAmount());
-					cashDetailsDao.update(cashDetails);		
+					// update balace of the bank which is dispensing cash for our customer
+					//cashDetails.setAmount(cashDetails.getAmount()-user.getAmount());
+					//cashDetailsDao.update(cashDetails);		
 					user.setAmount(ua.getBalance());							
 					return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
 
@@ -89,6 +88,10 @@ public class RestServiceImpl implements RestService {
 			}
 
 
+
+
+		} else {
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist		
 		}
 
 
@@ -99,11 +102,7 @@ public class RestServiceImpl implements RestService {
 		// TODO Auto-generated method stub
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404			
-		}
-		else if (ualist.size()>0){
-			System.out.println("Ravi "+ualist.size());
+		if(ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -112,8 +111,9 @@ public class RestServiceImpl implements RestService {
 			}
 			else
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401
-		}else {
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404
+		}
+		else {
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404	
 		}
 
 	}
@@ -139,7 +139,7 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(!(ualist.equals(null))){
+		if(ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -202,10 +202,8 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validate(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
-		}
-		else {
+		if(ualist.size()>0){
+
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -214,7 +212,9 @@ public class RestServiceImpl implements RestService {
 			}
 			else
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
-
+		}
+		else {
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
 		}
 
 	}
@@ -222,7 +222,7 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
+		if(ualist.size()>0){
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
 		}
 		else 
@@ -242,10 +242,8 @@ public class RestServiceImpl implements RestService {
 		CashDetails cashDetails = new CashDetails();
 
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getDestAcntId());
-		if(ualist.equals(null)){
-			user.setMsg("Account is not of our bank");
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
-		}else{
+		if(ualist.size()>0){
+
 
 			uasrc = ualist.get(0);
 			// create 2 entries in txn table for cr and dr
@@ -284,6 +282,11 @@ public class RestServiceImpl implements RestService {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 account not found
 
 
+
+
+		}else{
+			user.setMsg("Account is not of our bank");
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
 		}
 
 	}

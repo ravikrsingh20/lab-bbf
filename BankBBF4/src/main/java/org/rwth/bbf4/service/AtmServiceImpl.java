@@ -55,58 +55,59 @@ public class AtmServiceImpl implements AtmService {
 			cashDetails = cashDetailsDao.get(3);
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			ua = ualist.get(0);
-			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
-				// password matches
-				if (ua.getBalance() >= useraccount.getAmt() ){						
-					int id=0 ;
+			if(ualist.size()>0){
+				ua = ualist.get(0);
+				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+					// password matches
+					if (ua.getBalance() >= useraccount.getAmt() ){						
+						int id=0 ;
 
-					if(cashDetails.getAmount() >= useraccount.getAmt()){
-						// dispense cash and update the balance in account
-						ua.setBalance(ua.getBalance() - useraccount.getAmt());
-						userAccountDao.update(ua);
+						if(cashDetails.getAmount() >= useraccount.getAmt()){
+							// dispense cash and update the balance in account
+							ua.setBalance(ua.getBalance() - useraccount.getAmt());
+							userAccountDao.update(ua);
 
-						// also create an entry in txn table
-						txnDtls.setAtmname(useraccount.getAtmname());
-						txnDtls.setExecdt(new Timestamp(date.getTime()));
-						txnDtls.setOrddt(new Timestamp(date.getTime()));
-						txnDtls.setTxnamt(useraccount.getAmt());
-						txnDtls.setTxncrdracntid(cashDetails.getAcntId());
-						txnDtls.setTxncrdrbnknm(useraccount.getBnkname());
-						txnDtls.setTxnacntid(ua.getAcntid());
-						txnDtls.setTxnflg("DR");
-						txnDtls.setTxntyp("ATM");
-						txnDtls.setTxnstat("Processed");
+							// also create an entry in txn table
+							txnDtls.setAtmname(useraccount.getAtmname());
+							txnDtls.setExecdt(new Timestamp(date.getTime()));
+							txnDtls.setOrddt(new Timestamp(date.getTime()));
+							txnDtls.setTxnamt(useraccount.getAmt());
+							txnDtls.setTxncrdracntid(cashDetails.getAcntId());
+							txnDtls.setTxncrdrbnknm(useraccount.getBnkname());
+							txnDtls.setTxnacntid(ua.getAcntid());
+							txnDtls.setTxnflg("DR");
+							txnDtls.setTxntyp("ATM");
+							txnDtls.setTxnstat("Processed");
 
-						txnDtlsDao.create(txnDtls);
-						// update atm balance
-						cashDetails.setAmount(cashDetails.getAmount()-useraccount.getAmt());
-						cashDetailsDao.update(cashDetails);		
-						useraccount.setBalance(ua.getBalance());
-						useraccount.setMsg("Dispensing Cash!!\n Amount"
-								+ useraccount.getAmt()
-								+ " successfully withdrawn"
-								+" \n Remaining Balance is "
-								+ua.getBalance());
+							txnDtlsDao.create(txnDtls);
+							// update atm balance
+							cashDetails.setAmount(cashDetails.getAmount()-useraccount.getAmt());
+							cashDetailsDao.update(cashDetails);		
+							useraccount.setBalance(ua.getBalance());
+							useraccount.setMsg("Dispensing Cash!!\n Amount"
+									+ useraccount.getAmt()
+									+ " successfully withdrawn"
+									+" \n Remaining Balance is "
+									+ua.getBalance());
+
+						}
+						else{
+							useraccount.setMsg("Sorry!! ATM doesnot have sufficient cash try other atms");
+						}
 
 					}
-					else{
-						useraccount.setMsg("Sorry!! ATM doesnot have sufficient cash try other atms");
-					}
+					else {
+						useraccount.setMsg("Sorry!! Not enough balance. Your Balance is "
+								+ ua.getBalance()
+								+" and Amount entered to withdraw" 
+								+useraccount.getAmt());
 
+					}
 				}
 				else {
-					useraccount.setMsg("Sorry!! Not enough balance. Your Balance is "
-							+ ua.getBalance()
-							+" and Amount entered to withdraw" 
-							+useraccount.getAmt());
-
+					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 				}
-			}
-			else {
-				useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
-
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
@@ -209,60 +210,63 @@ public class AtmServiceImpl implements AtmService {
 		// amount to be withdrawn will be in amt field
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			ua = ualist.get(0);
-			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
-				//get all txn details from db
-				txndtlsList = txnDtlsDao.getTxnDtlsAtm(useraccount);
-				// send only amount message (credit/debit from etc) exec date,
-				for (TxnDtls txnDtlsTmp : txndtlsList){
-					txnDtlsret = new  TxnDtls();
-					msg="";
-					txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
-					txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
-					txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
-					txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
-					// set message to be displayed
-					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
-						msg += " Online Transaction.";
-						msg += " " + txnDtlsTmp.getTxnamt();
-						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-							msg += " Euro Credited to Your Account from Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+			if(ualist.size()>0){
+				ua = ualist.get(0);
+				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+					//get all txn details from db
+					txndtlsList = txnDtlsDao.getTxnDtlsAtm(useraccount);
+					// send only amount message (credit/debit from etc) exec date,
+					for (TxnDtls txnDtlsTmp : txndtlsList){
+						txnDtlsret = new  TxnDtls();
+						msg="";
+						txnDtlsret.setTxnid(txnDtlsTmp.getTxnid());
+						txnDtlsret.setTxnamt(txnDtlsTmp.getTxnamt());
+						txnDtlsret.setTxnacntid(txnDtlsTmp.getTxnacntid());
+						txnDtlsret.setExecdt(txnDtlsTmp.getExecdt());
+						// set message to be displayed
+						if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
+							msg += " Online Transaction.";
+							msg += " " + txnDtlsTmp.getTxnamt();
+							if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+								msg += " Euro Credited to Your Account from Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							}
+							if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+								msg += " Euro Debited from Your Account to Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							}
 						}
-						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account to Bank Account : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-						}
-					}
 
-					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ATM")){
-						msg += " ATM Transaction.";
-						msg += " " + txnDtlsTmp.getTxnamt();
-						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
-							msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+						if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ATM")){
+							msg += " ATM Transaction.";
+							msg += " " + txnDtlsTmp.getTxnamt();
+							if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("CR")){
+								msg += " Euro Credited to Your Account from ATM : "+txnDtlsTmp.getTxncrdracntid() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							}
+							if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
+								msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
+							}
 						}
-						if (txnDtlsTmp.getTxnflg().equalsIgnoreCase("DR")){
-							msg += " Euro Debited from Your Account from ATM : "+txnDtlsTmp.getAtmname() +" Bank Name : "+txnDtlsTmp.getTxncrdrbnknm();
-						}
-					}
 
-					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
-						msg += " Bank 2 Bank Transaction.";
-						msg += " " + txnDtlsTmp.getTxnamt();
+						if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("B2B")){
+							msg += " Bank 2 Bank Transaction.";
+							msg += " " + txnDtlsTmp.getTxnamt();
+						}
+						msg += " Status : "+txnDtlsTmp.getTxnstat();
+						txnDtlsret.setMsg(msg);
+						txndtlsListret.add(txnDtlsret);
+						useraccount.setBalance(ua.getBalance());
+
 					}
-					msg += " Status : "+txnDtlsTmp.getTxnstat();
-					txnDtlsret.setMsg(msg);
-					txndtlsListret.add(txnDtlsret);
-					useraccount.setBalance(ua.getBalance());
+					useraccount.setMsg("OK");
+					return txndtlsListret;				
 
 				}
-				useraccount.setMsg("OK");
-				return txndtlsListret;				
+				else {
+					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
+				}
 			}
-			else {
-				useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
-			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
 
@@ -315,19 +319,16 @@ public class AtmServiceImpl implements AtmService {
 		UserAccount ua  ;
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-
-			if(ualist.equals(null)){
-				useraccount.setMsg("Account doesnot exist");
-
-			}else{
+			if(ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
 					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+ua.getBalance());
-
 				}
 				else
-					useraccount.setMsg("ATM Pin and Account no. doesnot match");
+					useraccount.setMsg("ATM Pin and Account no. doesnot match");	
+			}else{
+				useraccount.setMsg("Account doesnot exist");
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
