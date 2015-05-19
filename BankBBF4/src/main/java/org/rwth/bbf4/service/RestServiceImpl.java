@@ -99,19 +99,21 @@ public class RestServiceImpl implements RestService {
 		// TODO Auto-generated method stub
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(!(ualist.equals(null))){
+		if(ualist.equals(null)){
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404			
+		}
+		else {
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				user.setAmount(ua.getBalance());
 				return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
-
 			}
 			else
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401
+			
 		}
-		else 
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404
+			
 	}
 	@Override
 	public ResponseEntity<List<JsonTxnDtls>> readTxn(JsonUser user) {
