@@ -52,38 +52,31 @@ public class RestServiceImpl implements RestService {
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				// password matches
-				if (ua.getBalance() >= user.getAmount() ){						
-					int id=0 ;
-					cashDetails = cashDetailsDao.get(1);						
-					if(cashDetails.getAmount() >= user.getAmount()){
-						// dispense cash and update the balance in account
-						ua.setBalance(ua.getBalance() - user.getAmount());
-						userAccountDao.update(ua);
+				if (ua.getBalance() >= user.getAmount() ){			
+					// dispense cash and update the balance in account
+					ua.setBalance(ua.getBalance() - user.getAmount());
+					userAccountDao.update(ua);
 
-						// also create an entry in txn table
-						txnDtls.setAtmname("OtherBankAtm");
-						txnDtls.setExecdt(new Timestamp(date.getTime()));
-						txnDtls.setOrddt(new Timestamp(date.getTime()));
-						txnDtls.setTxnamt(user.getAmount());
-						//txnDtls.setTxncracntid(txncracntid); no cr 
-						//txnDtls.setTxncrbnknm();txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm()
-						txnDtls.setTxncrdracntid("OtherBankAtm");
-						txnDtls.setTxncrdrbnknm("OtherBankAtm");
-						txnDtls.setTxnacntid(ua.getAcntid());
-						txnDtls.setTxnflg("DR");
-						txnDtls.setTxntyp("ATM");
-						txnDtls.setTxnstat("Processed");
+					// also create an entry in txn table
+					txnDtls.setAtmname("OtherBankAtm");
+					txnDtls.setExecdt(new Timestamp(date.getTime()));
+					txnDtls.setOrddt(new Timestamp(date.getTime()));
+					txnDtls.setTxnamt(user.getAmount());
+					//txnDtls.setTxncracntid(txncracntid); no cr 
+					//txnDtls.setTxncrbnknm();txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm()
+					txnDtls.setTxncrdracntid("OtherBankAtm");
+					txnDtls.setTxncrdrbnknm("OtherBankAtm");
+					txnDtls.setTxnacntid(ua.getAcntid());
+					txnDtls.setTxnflg("DR");
+					txnDtls.setTxntyp("ATM");
+					txnDtls.setTxnstat("Processed");
 
-						txnDtlsDao.create(txnDtls);
-						// update atm balance
-						cashDetails.setAmount(cashDetails.getAmount()-user.getAmount());
-						cashDetailsDao.update(cashDetails);		
-						user.setAmount(ua.getBalance());							
-						return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
-					}
-					else{
-						return new ResponseEntity<JsonUser>(user,HttpStatus.UPGRADE_REQUIRED); //426 not enough balance in atm
-					}
+					txnDtlsDao.create(txnDtls);
+					// update atm balance
+					cashDetails.setAmount(cashDetails.getAmount()-user.getAmount());
+					cashDetailsDao.update(cashDetails);		
+					user.setAmount(ua.getBalance());							
+					return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
 
 				}
 				else {
@@ -140,7 +133,7 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist != null){
+		if(!(ualist.equals(null))){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -203,7 +196,10 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validate(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist != null){
+		if(ualist.equals(null)){
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
+		}
+		else {
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -212,16 +208,15 @@ public class RestServiceImpl implements RestService {
 			}
 			else
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
+
 		}
-		else 
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
 
 	}
 	@Override
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist != null){
+		if(ualist.equals(null)){
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
 		}
 		else 
@@ -278,7 +273,7 @@ public class RestServiceImpl implements RestService {
 			cashDetails = cashDetailsDao.get(104);
 			cashDetails.setAmount(cashDetails.getAmount() + user.getAmount());
 			cashDetailsDao.update(cashDetails);
-			
+
 			user.setMsg("Wire Transfer Request completed successfully.");
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 account not found
 

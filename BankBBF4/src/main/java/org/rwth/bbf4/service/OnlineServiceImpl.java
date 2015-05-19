@@ -332,7 +332,7 @@ public class OnlineServiceImpl implements OnlineService{
 					txnDtlstmpdest.setTxntyp("B2B");
 					txnDtlstmpdest.setTxnstat("Processed");
 
-					cashDetailsDao.update(cdDest);
+					cashDetailsDao.update(cdSrc);
 					cashDetailsDao.update(cdDest);
 					txnDtlsDao.create(txnDtlstmpsrc);
 					txnDtlsDao.create(txnDtlstmpdest);
