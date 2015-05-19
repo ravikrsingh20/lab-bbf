@@ -10,6 +10,7 @@ import org.rwth.bbf4.dao.CashDetailsDao;
 import org.rwth.bbf4.dao.TxnDtlsDao;
 import org.rwth.bbf4.dao.UserAccountDao;
 import org.rwth.bbf4.model.CashDetails;
+import org.rwth.bbf4.model.JsonTxnDtls;
 import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
@@ -275,11 +276,15 @@ public class AtmServiceImpl implements AtmService {
 			user.setCardNumber(useraccount.getAcntid());
 			user.setPin(useraccount.getAtmpin());
 			try{
-				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user, JsonUser.class);
-				if(userReturn.getStatusCode() == HttpStatus.OK){
+				ResponseEntity<List> txnDtlsList;
 
-				}else if (userReturn.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
+				txnDtlsList= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user, List.class);
+
+				if(txnDtlsList.getStatusCode() == HttpStatus.OK){
+					for(TxnDtls txnDtlsTmp : txndtlsList){
+						txndtlsListret.add(txnDtlsTmp);					}
+
+				}else if (txnDtlsList.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
 					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
 				}
@@ -310,10 +315,10 @@ public class AtmServiceImpl implements AtmService {
 		UserAccount ua  ;
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			
+
 			if(ualist.equals(null)){
 				useraccount.setMsg("Account doesnot exist");
-				
+
 			}else{
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -324,7 +329,7 @@ public class AtmServiceImpl implements AtmService {
 				else
 					useraccount.setMsg("ATM Pin and Account no. doesnot match");
 			}
-			
+
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
 
 		} else if (useraccount.getBnkname().equals("BANK2")){

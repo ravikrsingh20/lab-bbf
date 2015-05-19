@@ -51,25 +51,28 @@ public class AtmBnkController {
 		//useraccount is not null and has bankname and atm name
 		UserAccount ua = new UserAccount();
 		// check if balance is not 0
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit pin");
-			model.addAttribute("UserAccount",ua);	
-			return "cashwithdrawlpage";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit pin");
+				model.addAttribute("UserAccount",ua);	
+				return "cashwithdrawlpage";
 
-		}
+			}
 
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban number");
-			model.addAttribute("UserAccount",ua);	
-			return "cashwithdrawlpage";
-		}
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban number");
+				model.addAttribute("UserAccount",ua);	
+				return "cashwithdrawlpage";
+			}
 
-		if(useraccount.getAmt() == 0){	
-			ua.setMsg("Enter some amount to withdraw");
-			model.addAttribute("UserAccount",ua);
-			return "cashwithdrawlpage";
+			if(useraccount.getAmt() == 0){	
+				ua.setMsg("Enter some amount to withdraw");
+				model.addAttribute("UserAccount",ua);
+				return "cashwithdrawlpage";
 
-		} 					
+			} 	
+			
+		}						
 
 		ua = atmService.withdrawCash(useraccount);				
 		model.addAttribute("userAccount", ua);	
