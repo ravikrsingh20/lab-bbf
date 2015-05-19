@@ -99,7 +99,7 @@ public class RestServiceImpl implements RestService {
 		// TODO Auto-generated method stub
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.equals(null)){
+		if(!(ualist.equals(null))){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -236,12 +236,12 @@ public class RestServiceImpl implements RestService {
 		CashDetails cashDetails = new CashDetails();
 
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getDestAcntId());
-		uasrc = ualist.get(0);
-		if (uasrc.equals(null)){
+		if(ualist.equals(null)){
 			user.setMsg("Account is not of our bank");
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+		}else{
 
-		}else {
+			uasrc = ualist.get(0);
 			// create 2 entries in txn table for cr and dr
 			uasrc.setBalance(uasrc.getBalance() + user.getAmount());
 			userAccountDao.update(uasrc);			
@@ -276,6 +276,7 @@ public class RestServiceImpl implements RestService {
 
 			user.setMsg("Wire Transfer Request completed successfully.");
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 account not found
+
 
 		}
 

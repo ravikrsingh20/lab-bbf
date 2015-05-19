@@ -123,7 +123,7 @@ public class AtmServiceImpl implements AtmService {
 			//JsonUser userReturn = new JsonUser();
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/validate/cashWithdraw", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/cash", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 					// everything is ok
 					// also create an entry in txn table					
@@ -276,7 +276,7 @@ public class AtmServiceImpl implements AtmService {
 			user.setPin(useraccount.getAtmpin());
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/validate/readTxn", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 
 				}else if (userReturn.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
@@ -310,14 +310,21 @@ public class AtmServiceImpl implements AtmService {
 		UserAccount ua  ;
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			ua = ualist.get(0);
-			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
-				useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+ua.getBalance());
+			
+			if(ualist.equals(null)){
+				useraccount.setMsg("Account doesnot exist");
+				
+			}else{
+				ua = ualist.get(0);
+				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+ua.getBalance());
 
+				}
+				else
+					useraccount.setMsg("ATM Pin and Account no. doesnot match");
 			}
-			else
-				useraccount.setMsg("ATM Pin and Account no. doesnot match");
+			
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
 
 		} else if (useraccount.getBnkname().equals("BANK2")){
@@ -330,7 +337,7 @@ public class AtmServiceImpl implements AtmService {
 			user.setPin(useraccount.getAtmpin());
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/validate/viewBal", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/bal", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+userReturn.getBody().getAmount());
 				}else if (userReturn.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
