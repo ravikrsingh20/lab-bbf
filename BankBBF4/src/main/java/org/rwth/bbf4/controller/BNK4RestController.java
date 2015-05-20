@@ -65,7 +65,6 @@ public class BNK4RestController {
 	@RequestMapping(value = "/validate/cashWithdraw", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> cashWithdraw( @RequestBody JsonUser user) {
-		System.out.println(user.getCardNumber());
 		
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.cashWithdraw(user);
