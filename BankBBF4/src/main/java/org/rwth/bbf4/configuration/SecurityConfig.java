@@ -35,7 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.authorizeRequests()				
-		//.antMatchers("/validate/**").access("hasIpAddress('137.226.112.105') or hasIpAddress('137.226.112.104') or hasIpAddress('137.226.112.106') or hasIpAddress('137.226.112.108') or hasIpAddress('137.226.112.109') or  hasIpAddress('137.226.112.110') or hasIpAddress('137.226.112.92')  or hasIpAddress('137.226.112.92')")
+		.antMatchers("/validate/**").access("hasIpAddress('137.226.112.106')")
+		//.access("hasIpAddress('137.226.112.105') or hasIpAddress('137.226.112.104') or hasIpAddress('137.226.112.106') or hasIpAddress('137.226.112.108') or hasIpAddress('137.226.112.109') or  hasIpAddress('137.226.112.110') or hasIpAddress('137.226.112.92')  or hasIpAddress('137.226.112.92')")
 		.antMatchers("/emp/**").hasAnyAuthority("EMPL","ADMN")
 		.antMatchers("/onln/**").hasAuthority("CUST")
 		.antMatchers("/","/atmbank/**","/login/**","/logout/**","/register/**","/resources/**","/validate/**").permitAll()
