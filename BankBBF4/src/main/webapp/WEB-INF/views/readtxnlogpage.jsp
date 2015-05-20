@@ -10,7 +10,7 @@
 <body>
 	<%@ include file="header.jsp"%>
 	<h1>Please enter below details to read transactions log</h1>
-	<c:out value="${userAccount.msg}" />
+	<c:out value="${UserAccount.msg}" />
 	<div>
 		<sf:form method="POST" commandName="UserAccount"
 			action="/bbf4/atmbank/readtxnlog">

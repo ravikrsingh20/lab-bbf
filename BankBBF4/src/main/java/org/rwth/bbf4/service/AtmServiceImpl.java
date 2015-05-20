@@ -2,6 +2,7 @@ package org.rwth.bbf4.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -276,19 +277,25 @@ public class AtmServiceImpl implements AtmService {
 
 			// call web service of other bank to facilitate cash withdrawl of foreign bank atms			
 			RestTemplate restTemplate = new RestTemplate();
-			JsonUser user = new JsonUser();
+			JsonUser user = new JsonUser();			
 			user.setCardNumber(useraccount.getAcntid());
 			user.setPin(useraccount.getAtmpin());
 			try{
-				ResponseEntity<List> txnDtlsList;
-
-				txnDtlsList= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user, List.class);
-
-				if(txnDtlsList.getStatusCode() == HttpStatus.OK){
-					for(TxnDtls txnDtlsTmp : txndtlsList){
-						txndtlsListret.add(txnDtlsTmp);					}
-
-				}else if (txnDtlsList.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
+				
+				ResponseEntity<JsonTxnDtls[]> jsonTxnDtls = restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user,JsonTxnDtls[].class);
+				JsonTxnDtls[] jsonTxnDtlsarray= jsonTxnDtls.getBody();
+				if(jsonTxnDtls.getStatusCode() == HttpStatus.OK){
+					//List  jsonlist = jsonTxnDtls.getBody();
+					for(JsonTxnDtls jsontmp:jsonTxnDtlsarray){
+						txnDtlsret = new  TxnDtls();
+						txnDtlsret.setMsg(jsontmp.getMessage());
+						txnDtlsret.setExecdt(jsontmp.getExecDate());
+						txnDtlsret.setTxnamt(jsontmp.getAmount());
+						txndtlsListret.add(txnDtlsret);
+						
+					}
+					
+				}else if (jsonTxnDtls.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
 					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
 				}

@@ -92,18 +92,22 @@ public class AtmBnkController {
 		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();	
 		UserAccount ua = new UserAccount();		
 		// checks msg if there is some error msg like pin doesnot match
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit atm pin");
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit atm pin");
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage";
 
-		}
+			}
 
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban no.");
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage";
-		}
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban no.");
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage";
+			}
+			
+		}		
+		
 		//get log
 		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
 		if (useraccount.getMsg().equals("OK")) {
@@ -130,19 +134,23 @@ public class AtmBnkController {
 		//useraccount is not null and has bankname and atm name
 		UserAccount ua = new UserAccount();
 		// check if balance is not 0
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit pin");
-			model.addAttribute("UserAccount",ua);	
-			return "viewbalance";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit pin");
+				model.addAttribute("UserAccount",ua);	
+				return "viewbalance";
 
+			}
+
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban number");
+				model.addAttribute("UserAccount",ua);	
+				return "viewbalance";
+			}				
+
+			
 		}
-
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban number");
-			model.addAttribute("UserAccount",ua);	
-			return "viewbalance";
-		}				
-
+		
 		ua = atmService.viewBalance(useraccount);				
 		model.addAttribute("userAccount", ua);	
 		return "showbalance";	

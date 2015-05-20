@@ -10,7 +10,7 @@ create table ACNT_ROLE (
         AR_RL_NM varchar(4) not null,
         AR_RL_ID integer not null,
         primary key (AR_ID)
-    )
+    );
 create table CASH_DTLS (
         CD_ID integer not null auto_increment,
         CD_ACNT_ID varchar(12),
@@ -18,12 +18,12 @@ create table CASH_DTLS (
         CD_BNK_NAME varchar(20),
         CD_CR_DR varchar(2),
         primary key (CD_ID)
-    )
+    );
 create table ROLE (
         RL_ID integer not null auto_increment,
         RL_NAME varchar(12) not null,
         primary key (RL_ID)
-    )
+    );
 create table TXN_DTLS (
         TXN_ID bigint not null auto_increment,
         TXN_ATM_NM varchar(255),
@@ -37,7 +37,7 @@ create table TXN_DTLS (
         TXN_STAT varchar(255),
         TXN_TYP varchar(255),
         primary key (TXN_ID)
-    )
+    );
 create table USER_ACNT (
         Id bigint not null auto_increment,
         UA_ACNT_ID varchar(12),
@@ -52,9 +52,9 @@ create table USER_ACNT (
         UA_PASSWD varchar(255),
         UA_PHN_NO varchar(13),
         primary key (Id)
-    )
+    );
 alter table USER_ACNT 
-        add constraint UK_bboqn4ac98ne2w8krq95ao1ot  unique (UA_ACNT_ID)
+        add constraint UK_bboqn4ac98ne2w8krq95ao1ot  unique (UA_ACNT_ID);
  alter table USER_ACNT 
-        add constraint UK_s4qpx4pcghxisx7hbylqbbs2e  unique (UA_EMAIL)
+        add constraint UK_s4qpx4pcghxisx7hbylqbbs2e  unique (UA_EMAIL);
 commit;

@@ -8,5 +8,8 @@ public interface CashDetailsDao extends Dao<CashDetails>{
 
 	public abstract CashDetails getCashDetailsAtm(CashDetails cashDetails);
 	public List<CashDetails> findAll();
+	
+	public CashDetails getCashDetailsbyId(int id) ;
+
 
 }
