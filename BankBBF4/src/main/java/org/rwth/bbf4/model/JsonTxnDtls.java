@@ -4,28 +4,33 @@ import java.sql.Timestamp;
 
 public class JsonTxnDtls  {
 	
-	private Timestamp execDate;
+	private String execDate;
 	
-	private double amount;
+	private String amount;
 	
 	private String message;
-	public Timestamp getExecDate() {
+
+	public String getExecDate() {
 		return execDate;
 	}
-	public void setExecDate(Timestamp execDate) {
+
+	public void setExecDate(String execDate) {
 		this.execDate = execDate;
 	}
-	public double getAmount() {
+
+	public String getAmount() {
 		return amount;
 	}
-	public void setAmount(double amount) {
+
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+
 	public String getMessage() {
 		return message;
 	}
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
 }

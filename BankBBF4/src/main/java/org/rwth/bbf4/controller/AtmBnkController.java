@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.rwth.bbf4.model.JsonTxnDtls;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.rwth.bbf4.service.AtmService;
@@ -105,21 +106,35 @@ public class AtmBnkController {
 				model.addAttribute("UserAccount", ua );
 				return "readtxnlogpage";
 			}
+			//get log
+			txndtlslist = atmService.getTxnDtlsAtm(useraccount);
+			if (useraccount.getMsg().equals("OK")) {
+				model.addAttribute("TxnDtlsList", txndtlslist );
+				model.addAttribute("UserAccount", useraccount );
+				return "showtxnlogpage";
+			}			
+			else{
+				ua.setMsg(useraccount.getMsg());
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage"; 
+			}
 			
-		}		
-		
-		//get log
-		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
-		if (useraccount.getMsg().equals("OK")) {
-			model.addAttribute("TxnDtlsList", txndtlslist );
-			model.addAttribute("UserAccount", useraccount );
-			return "showtxnlogpage";
-		}			
-		else{
-			ua.setMsg(useraccount.getMsg());
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage"; 
+		}	else {
+			List<JsonTxnDtls> jsontxndtlslist = atmService.getTxnDtlsAtmOB(useraccount);
+			if (useraccount.getMsg().equals("OK")) {
+				model.addAttribute("JsonTxnDtlsList", txndtlslist );
+				model.addAttribute("UserAccount", useraccount );
+				return "showtxnlogpageob";
+			}			
+			else{
+				ua.setMsg(useraccount.getMsg());
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage"; 
+			}
+			
 		}
+		
+		
 
 	}
 

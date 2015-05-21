@@ -2,7 +2,7 @@ package org.rwth.bbf4.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -126,7 +126,7 @@ public class AtmServiceImpl implements AtmService {
 			//JsonUser userReturn = new JsonUser();
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/cash", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/cash/format/json", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 					// everything is ok
 					// also create an entry in txn table					
@@ -269,7 +269,14 @@ public class AtmServiceImpl implements AtmService {
 			}
 
 
-		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
+		}
+
+		return txndtlsListret;
+	}
+	@Override
+	public List<JsonTxnDtls> getTxnDtlsAtmOB(UserAccount useraccount){
+		List<JsonTxnDtls> jsonTxnDtlslist = new ArrayList<JsonTxnDtls>();
+		if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
 
 		} else if (useraccount.getBnkname().equals("BANK2")){
 
@@ -281,20 +288,17 @@ public class AtmServiceImpl implements AtmService {
 			user.setCardNumber(useraccount.getAcntid());
 			user.setPin(useraccount.getAtmpin());
 			try{
-				
-				ResponseEntity<JsonTxnDtls[]> jsonTxnDtls = restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans", user,JsonTxnDtls[].class);
-				JsonTxnDtls[] jsonTxnDtlsarray= jsonTxnDtls.getBody();
+
+				ResponseEntity<List> jsonTxnDtls = restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans/format/json", user,List.class);
+				List<JsonTxnDtls> jsonRetlist= jsonTxnDtls.getBody();
 				if(jsonTxnDtls.getStatusCode() == HttpStatus.OK){
 					//List  jsonlist = jsonTxnDtls.getBody();
-					for(JsonTxnDtls jsontmp:jsonTxnDtlsarray){
-						txnDtlsret = new  TxnDtls();
-						txnDtlsret.setMsg(jsontmp.getMessage());
-						txnDtlsret.setExecdt(jsontmp.getExecDate());
-						txnDtlsret.setTxnamt(jsontmp.getAmount());
-						txndtlsListret.add(txnDtlsret);
+					for(JsonTxnDtls jsontmp:jsonRetlist){
 						
+						
+
 					}
-					
+
 				}else if (jsonTxnDtls.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
 					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
@@ -316,8 +320,8 @@ public class AtmServiceImpl implements AtmService {
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK9")){
 
 		}
+		return jsonTxnDtlslist;
 
-		return txndtlsListret;
 	}
 
 	@Override
@@ -350,7 +354,7 @@ public class AtmServiceImpl implements AtmService {
 			user.setPin(useraccount.getAtmpin());
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/bal", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/bal/format/json", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+userReturn.getBody().getAmount());
 				}else if (userReturn.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
