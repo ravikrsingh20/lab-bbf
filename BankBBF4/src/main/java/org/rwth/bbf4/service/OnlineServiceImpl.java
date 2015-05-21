@@ -10,10 +10,15 @@ import org.rwth.bbf4.dao.CashDetailsDao;
 import org.rwth.bbf4.dao.TxnDtlsDao;
 import org.rwth.bbf4.dao.UserAccountDao;
 import org.rwth.bbf4.model.CashDetails;
+import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 @Service("onlineService")
 @Transactional
@@ -113,42 +118,62 @@ public class OnlineServiceImpl implements OnlineService{
 				if (uasrc.getBalance()>= txndtls.getTxnamt()){
 					// create 2 entries in txn table for cr and dr
 					
+					//JsonUser userReturn = new JsonUser();
+					try{
+						RestTemplate restTemplate = new RestTemplate();
+						JsonUser user = new JsonUser();
+						user.setAmount(txndtls.getTxnamt());
+						user.setSrcAcntId(txndtls.getTxnacntid());
+						user.setDestAcntId(txndtls.getTxncrdracntid());
+						user.setSrcBnkNm("BANK4");
+						ResponseEntity<JsonUser> userReturn;
+						userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
+						if(userReturn.getStatusCode() == HttpStatus.OK){
+							// also create an entry in txn table
+							txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
+							txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
+							txnDtlstmpsrc.setTxnamt(txndtls.getTxnamt());
+							txnDtlstmpsrc.setTxncrdracntid(txndtls.getTxncrdracntid());
+							txnDtlstmpsrc.setTxncrdrbnknm(txndtls.getTxncrdrbnknm());
+							txnDtlstmpsrc.setTxnacntid(uasrc.getAcntid());
+							txnDtlstmpsrc.setTxnflg("DR");
+							txnDtlstmpsrc.setTxntyp("ONLN");
+							txnDtlstmpsrc.setTxnstat("Processed");
+							txnDtlsDao.create(txnDtlstmpsrc);
 
-					// also create an entry in txn table
-					txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
-					txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
-					txnDtlstmpsrc.setTxnamt(txndtls.getTxnamt());
-					txnDtlstmpsrc.setTxncrdracntid(txndtls.getTxncrdracntid());
-					txnDtlstmpsrc.setTxncrdrbnknm(txndtls.getTxncrdrbnknm());
-					txnDtlstmpsrc.setTxnacntid(uasrc.getAcntid());
-					txnDtlstmpsrc.setTxnflg("DR");
-					txnDtlstmpsrc.setTxntyp("ONLN");
-					txnDtlstmpsrc.setTxnstat("Processed");
-					txnDtlsDao.create(txnDtlstmpsrc);
+							// create and entry for CR leg
+							txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
+							txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
+							txnDtlstmpdest.setTxnamt(txndtls.getTxnamt());
+							txnDtlstmpdest.setTxncrdracntid("BNK493000000");
+							txnDtlstmpdest.setTxncrdrbnknm(txndtls.getTxncrdrbnknm());
+							txnDtlstmpdest.setTxnacntid("BNK494000000");
+							txnDtlstmpdest.setTxnflg("DR");
+							txnDtlstmpdest.setTxntyp("B2B");
+							txnDtlstmpdest.setTxnstat("Processed");
+							txnDtlsDao.create(txnDtlstmpdest);
+							
+							//update bank 3 and bank4 cash details
+							cdSrc = cashDetailsDao.get(104);
+							cdDest= cashDetailsDao.get(103);
+							//add amount to our bank account and debit balance from customers foreign bank account
+							cdSrc.setAmount(cdSrc.getAmount()+txndtls.getTxnamt());
+							cdDest.setAmount(cdDest.getAmount()-txndtls.getTxnamt());
+							cashDetailsDao.update(cdDest);
+							cashDetailsDao.update(cdDest);
+							uasrc.setBalance(uasrc.getBalance() - txndtls.getTxnamt());
+							userAccountDao.update(uasrc);
+							txndtls.setMsg("Wire Transfer Request completed successfully.");
+							
+						}else if (userReturn.getStatusCode() == HttpStatus.NOT_FOUND){ //404 destination account doesnot exist
+							txndtls.setMsg("Error!!!! Destination account doesnot exist");
+						}
 
-					// create and entry for CR leg
-					txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
-					txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
-					txnDtlstmpdest.setTxnamt(txndtls.getTxnamt());
-					txnDtlstmpdest.setTxncrdracntid("BNK493000000");
-					txnDtlstmpdest.setTxncrdrbnknm(txndtls.getTxncrdrbnknm());
-					txnDtlstmpdest.setTxnacntid("BNK494000000");
-					txnDtlstmpdest.setTxnflg("DR");
-					txnDtlstmpdest.setTxntyp("B2B");
-					txnDtlstmpdest.setTxnstat("Processed");
-					txnDtlsDao.create(txnDtlstmpdest);
+					}catch (final HttpClientErrorException e) {
+						System.out.println(e.getStatusCode());
+						System.out.println(e.getResponseBodyAsString());
+					}
 					
-					//update bank 3 and bank4 cash details
-					cdSrc = cashDetailsDao.get(104);
-					cdDest= cashDetailsDao.get(103);
-					//add amount to our bank account and debit balance from customers foreign bank account
-					cdSrc.setAmount(cdSrc.getAmount()+txndtls.getTxnamt());
-					cdDest.setAmount(cdDest.getAmount()-txndtls.getTxnamt());
-					cashDetailsDao.update(cdDest);
-					cashDetailsDao.update(cdDest);
-					uasrc.setBalance(uasrc.getBalance() - txndtls.getTxnamt());
-					userAccountDao.update(uasrc);
-					txndtls.setMsg("Wire Transfer Request completed successfully.");
 				}
 			else{
 				txndtls.setMsg("Error!! Not Enough Balance in account");
