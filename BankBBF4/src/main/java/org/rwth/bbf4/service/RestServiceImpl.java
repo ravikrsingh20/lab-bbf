@@ -61,8 +61,6 @@ public class RestServiceImpl implements RestService {
 					txnDtls.setExecdt(new Timestamp(date.getTime()));
 					txnDtls.setOrddt(new Timestamp(date.getTime()));
 					txnDtls.setTxnamt(user.getAmount());
-					//txnDtls.setTxncracntid(txncracntid); no cr 
-					//txnDtls.setTxncrbnknm();txnDtls.getTxndracntid() +" Bank Name : "+txnDtls.getTxndrbnknm()
 					txnDtls.setTxncrdracntid("OtherBankAtm");
 					txnDtls.setTxncrdrbnknm("OtherBankAtm");
 					txnDtls.setTxnacntid(ua.getAcntid());
@@ -149,8 +147,8 @@ public class RestServiceImpl implements RestService {
 				for (TxnDtls txnDtlsTmp : txndtlsList){
 					jsontxnDtls = new JsonTxnDtls();
 					msg="";
-					jsontxnDtls.setAmount(txnDtlsTmp.getTxnamt());
-					jsontxnDtls.setExecDate(txnDtlsTmp.getExecdt());
+					jsontxnDtls.setAmount(Double.toString(txnDtlsTmp.getTxnamt()));
+					jsontxnDtls.setExecDate(txnDtlsTmp.getExecdt().toString());
 
 					// set message to be displayed
 					if (txnDtlsTmp.getTxntyp().equalsIgnoreCase("ONLN")){
@@ -243,8 +241,6 @@ public class RestServiceImpl implements RestService {
 
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getDestAcntId());
 		if(ualist.size()>0){
-
-
 			uasrc = ualist.get(0);
 			// create 2 entries in txn table for cr and dr
 			uasrc.setBalance(uasrc.getBalance() + user.getAmount());
@@ -262,15 +258,16 @@ public class RestServiceImpl implements RestService {
 			txnDtlstmpsrc.setTxnstat("Processed");
 			txnDtlsDao.create(txnDtlstmpsrc);
 
-			// update the bank account since we received money from other bank.
+			// create one transaction from bank x to our bank. need to handle mor functionality over here debit the bank account from where we got request
+			//to be specific
 			txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
 			txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
 			txnDtlstmpdest.setTxnamt(user.getAmount());
-			txnDtlstmpdest.setTxncrdracntid(uasrc.getAcntid());
-			txnDtlstmpdest.setTxncrdrbnknm(uasrc.getBnkname());
+			txnDtlstmpdest.setTxncrdracntid(user.getSrcAcntId());
+			txnDtlstmpdest.setTxncrdrbnknm(user.getSrcBnkNm());
 			txnDtlstmpdest.setTxnacntid("BNK494000000");
 			txnDtlstmpdest.setTxnflg("CR");
-			txnDtlstmpdest.setTxntyp("ONLN");
+			txnDtlstmpdest.setTxntyp("B2B");
 			txnDtlstmpdest.setTxnstat("Processed");
 			txnDtlsDao.create(txnDtlstmpdest);
 			//update cash details for Bank as amount is recieved in bank account

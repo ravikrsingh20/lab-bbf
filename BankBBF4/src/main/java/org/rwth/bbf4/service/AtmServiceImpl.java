@@ -2,8 +2,9 @@ package org.rwth.bbf4.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
@@ -112,8 +113,9 @@ public class AtmServiceImpl implements AtmService {
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
-
+			useraccount.setMsg("Sorry!! BANK1 not supported");
 		} else if (useraccount.getBnkname().equals("BANK2")){
+			useraccount.setMsg("Sorry!! BANK2 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
 
@@ -139,8 +141,8 @@ public class AtmServiceImpl implements AtmService {
 					txnDtls.setTxncrdracntid("BNK493000000");
 					txnDtls.setTxncrdrbnknm(useraccount.getBnkname());
 					txnDtls.setTxnacntid(useraccount.getAcntid());
-					txnDtls.setTxnflg("DR");
-					txnDtls.setTxntyp("ATM");
+					txnDtls.setTxnflg("CR");
+					txnDtls.setTxntyp("B2B");
 					txnDtls.setTxnstat("Processed");
 
 					txnDtlsDao.create(txnDtls);
@@ -177,14 +179,19 @@ public class AtmServiceImpl implements AtmService {
 			//	Update cash details for that particular bank and create one entry in transaction with type B2B
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK5")){
+			useraccount.setMsg("Sorry!! BANK5 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK6")){
+			useraccount.setMsg("Sorry!! BANK6 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK7")){
+			useraccount.setMsg("Sorry!! BANK7 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK8")){
+			useraccount.setMsg("Sorry!! BANK8 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK9")){
+			useraccount.setMsg("Sorry!! BANK9 not supported");
 
 		}
 
@@ -275,29 +282,34 @@ public class AtmServiceImpl implements AtmService {
 	}
 	@Override
 	public List<JsonTxnDtls> getTxnDtlsAtmOB(UserAccount useraccount){
+		JsonTxnDtls jtd;
 		List<JsonTxnDtls> jsonTxnDtlslist = new ArrayList<JsonTxnDtls>();
+		RestTemplate restTemplate = new RestTemplate();
+		JsonUser user = new JsonUser();			
+		user.setCardNumber(useraccount.getAcntid());
+		user.setPin(useraccount.getAtmpin());
 		if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
+			useraccount.setMsg("Sorry!! BANK1 not supported");
 
 		} else if (useraccount.getBnkname().equals("BANK2")){
+			useraccount.setMsg("Sorry!! BANK2 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
-
-			// call web service of other bank to facilitate cash withdrawl of foreign bank atms			
-			RestTemplate restTemplate = new RestTemplate();
-			JsonUser user = new JsonUser();			
-			user.setCardNumber(useraccount.getAcntid());
-			user.setPin(useraccount.getAtmpin());
+			// call web service of other bank to facilitate cash withdrawl of foreign bank atms		
 			try{
-
 				ResponseEntity<List> jsonTxnDtls = restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans/format/json", user,List.class);
-				List<JsonTxnDtls> jsonRetlist= jsonTxnDtls.getBody();
+				List<Map<String, String>> jsonRetlist= jsonTxnDtls.getBody();
 				if(jsonTxnDtls.getStatusCode() == HttpStatus.OK){
 					//List  jsonlist = jsonTxnDtls.getBody();
-					for(JsonTxnDtls jsontmp:jsonRetlist){
-						
-						
+					for(Map<String, String> map : jsonRetlist){
+						jtd = new JsonTxnDtls();
+						jtd.setAmount(map.get("amount"));
+						jtd.setExecDate(map.get("execDate"));
+						jtd.setMessage(map.get("message"));
+						jsonTxnDtlslist.add(jtd);
 
 					}
+					useraccount.setMsg("OK");
 
 				}else if (jsonTxnDtls.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
 					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
@@ -310,14 +322,19 @@ public class AtmServiceImpl implements AtmService {
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK5")){
+			useraccount.setMsg("Sorry!! BANK5 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK6")){
+			useraccount.setMsg("Sorry!! BANK6 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK7")){
+			useraccount.setMsg("Sorry!! BANK7 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK8")){
+			useraccount.setMsg("Sorry!! BANK8 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK9")){
+			useraccount.setMsg("Sorry!! BANK9 not supported");
 
 		}
 		return jsonTxnDtlslist;
@@ -343,8 +360,10 @@ public class AtmServiceImpl implements AtmService {
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK1")){
+			useraccount.setMsg("Sorry!! BANK1 not supported");
 
 		} else if (useraccount.getBnkname().equals("BANK2")){
+			useraccount.setMsg("Sorry!! BANK2 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
 			// call web service of other bank to facilitate cash withdrawl of foreign bank atms			
@@ -368,14 +387,19 @@ public class AtmServiceImpl implements AtmService {
 			}
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK5")){
+			useraccount.setMsg("Sorry!! BANK5 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK6")){
+			useraccount.setMsg("Sorry!! BANK6 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK7")){
+			useraccount.setMsg("Sorry!! BANK7 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK8")){
+			useraccount.setMsg("Sorry!! BANK8 not supported");
 
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK9")){
+			useraccount.setMsg("Sorry!! BANK9 not supported");
 
 		}
 		return useraccount;

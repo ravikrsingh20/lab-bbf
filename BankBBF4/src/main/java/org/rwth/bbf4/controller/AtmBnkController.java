@@ -122,7 +122,7 @@ public class AtmBnkController {
 		}	else {
 			List<JsonTxnDtls> jsontxndtlslist = atmService.getTxnDtlsAtmOB(useraccount);
 			if (useraccount.getMsg().equals("OK")) {
-				model.addAttribute("JsonTxnDtlsList", txndtlslist );
+				model.addAttribute("JsonTxnDtlsList", jsontxndtlslist );
 				model.addAttribute("UserAccount", useraccount );
 				return "showtxnlogpageob";
 			}			
