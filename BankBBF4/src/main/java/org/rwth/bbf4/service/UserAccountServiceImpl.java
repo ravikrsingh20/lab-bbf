@@ -62,12 +62,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 		useraccount.setAtmpin(passwordEncoder.encode(useraccount.getAtmpin())); 
 		useraccount.setOnlnpin(passwordEncoder.encode(useraccount.getOnlnpin()));
 		userAccountDao.update(useraccount);
-		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#1"));
-		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#2"));
-		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#3"));
-		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#1"));
-		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#2"));
-		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#3"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#1"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#2"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#3"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#1"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#2"));
+//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#3"));
 		
 		//update account_role table
 		ar.setAcntId(useraccount.getAcntid());

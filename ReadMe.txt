@@ -1,3 +1,9 @@
+
+
+BAnk url
+
+http://137.226.112.107:8080/bbf4
+
 Step1 : Install spring toolsuite from below link for IDE to work with
 https://spring.io/tools/sts/all
 
@@ -27,6 +33,7 @@ all debit/credit properly.
 We add this amount to our total balance initially.
 SQL root pwd
 P@ssadm4_dba
+mysql --user=bbf4dba --password=P@ssbbf4_dba bank4_db
 
 
 
