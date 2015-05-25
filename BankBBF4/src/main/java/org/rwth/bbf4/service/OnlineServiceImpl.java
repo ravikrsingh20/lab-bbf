@@ -443,6 +443,40 @@ public TxnDtls lendMoney2Bank(UserAccount useraccount) {
 				txnDtlsDao.create(txnDtlstmpdest);
 				txndtls.setMsg("Wire Transfer Request completed successfully.");
 				//call other bank webservice to send money
+				if(useraccount.getBnkname().equals("BANK1")){
+					
+				}else if(useraccount.getBnkname().equals("BANK2")){
+					
+				}else if(useraccount.getBnkname().equals("BANK3")){
+					RestTemplate restTemplate = new RestTemplate();
+					JsonUser user = new JsonUser();
+					user.setAmount(txndtls.getTxnamt());
+					user.setSrcAcntId(txndtls.getTxnacntid());
+					user.setDestAcntId(txndtls.getTxncrdracntid());
+					user.setSrcBnkNm("BANK4");
+					ResponseEntity<JsonUser> userReturn;
+					userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/lendMoney/format/json", user, JsonUser.class);
+					if(userReturn.getStatusCode() == HttpStatus.OK){
+						txndtls.setMsg("Wire Transfer Request completed successfully. with bank 3");
+					}else {
+						txndtls.setMsg("Wire Transfer Request failed with bank 3");
+					}
+					
+					
+				}else if(useraccount.getBnkname().equals("BANK5")){
+					
+				}else if(useraccount.getBnkname().equals("BANK6")){
+					
+				}else if(useraccount.getBnkname().equals("BANK7")){
+					
+				}else if(useraccount.getBnkname().equals("BANK8")){
+					
+				}else if(useraccount.getBnkname().equals("BANK9")){
+					
+				}else {
+					txndtls.setMsg("Error!! Cash Details for the bank not found");
+					return txndtls;
+				}
 
 			}else {
 				txndtls.setMsg("We are bankrupt.");
