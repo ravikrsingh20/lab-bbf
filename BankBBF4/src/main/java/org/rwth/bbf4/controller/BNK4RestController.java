@@ -117,6 +117,20 @@ public class BNK4RestController {
 			
 
 	}
+	@RequestMapping(value = "/validate/lendMoney", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
+	@ResponseBody
+	public ResponseEntity<JsonUser> lendMoney(@RequestBody JsonUser user) {
+		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
+		
+			if(user.getAmount()>0){
+				return restService.lendMoney(user);				
+			}
+			else{
+				user.setMsg("Please Give Some amount to credit");
+				return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code				
+			}			
+		
+	}
 
 
 }

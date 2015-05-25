@@ -62,7 +62,10 @@ public class AccountController {
 		UserAccount ua = new UserAccount();
 		 if (!result.hasErrors()) {
 			 ua = service.createUserAccount(useraccount);
-		    }		
+		    }	else {
+		    	model.addAttribute("userAccount", useraccount);
+		    	return "register";	
+		    }
 			model.addAttribute("userAccount", ua);
 		return "regsuccess";
 	}

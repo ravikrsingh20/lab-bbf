@@ -45,7 +45,7 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -100,7 +100,7 @@ public class RestServiceImpl implements RestService {
 		// TODO Auto-generated method stub
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -137,7 +137,7 @@ public class RestServiceImpl implements RestService {
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
@@ -200,7 +200,7 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validate(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -220,7 +220,7 @@ public class RestServiceImpl implements RestService {
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
 		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
 		}
 		else 
@@ -240,7 +240,7 @@ public class RestServiceImpl implements RestService {
 		CashDetails cashDetails = new CashDetails();
 
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getDestAcntId());
-		if(ualist.size()>0){
+		if(ualist!=null && ualist.size()>0){
 			uasrc = ualist.get(0);
 			// create 2 entries in txn table for cr and dr
 			uasrc.setBalance(uasrc.getBalance() + user.getAmount());
@@ -276,15 +276,78 @@ public class RestServiceImpl implements RestService {
 			cashDetailsDao.update(cashDetails);
 
 			user.setMsg("Wire Transfer Request completed successfully.");
-			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 account not found
+			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 
 
 
 
 
 		}else{
 			user.setMsg("Account is not of our bank");
-			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND);// account not found
 		}
+
+	}
+	@Override
+	public ResponseEntity<JsonUser> lendMoney(JsonUser user) {
+
+		// TODO Auto-generated method stub
+		java.util.Date date= new java.util.Date();
+		TxnDtls txnDtlstmpsrc = new TxnDtls();
+		TxnDtls txnDtlstmpdest = new TxnDtls();
+		CashDetails cashDetails = new CashDetails();
+		CashDetails cdDest = new CashDetails();
+		CashDetails cdSrc = new CashDetails();
+		//get our bank account
+
+		cdSrc = cashDetailsDao.get(104);
+		if(user.getSrcBnkNm().equals("BANK1"))
+			cdDest= cashDetailsDao.get(101);				
+		else if(user.getSrcBnkNm().equals("BANK2"))
+			cdDest= cashDetailsDao.get(102);
+		else if(user.getSrcBnkNm().equals("BANK3"))
+			cdDest= cashDetailsDao.get(103);
+		else if(user.getSrcBnkNm().equals("BANK5"))
+			cdDest= cashDetailsDao.get(105);
+		else if(user.getSrcBnkNm().equals("BANK6"))
+			cdDest= cashDetailsDao.get(106);
+		else if(user.getSrcBnkNm().equals("BANK7"))
+			cdDest= cashDetailsDao.get(107);
+		else if(user.getSrcBnkNm().equals("BANK8"))
+			cdDest= cashDetailsDao.get(108);
+		else if(user.getSrcBnkNm().equals("BANK9"))
+			cdDest= cashDetailsDao.get(109);
+		// create and entry for CR leg where other bank account is debited				
+		txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
+		txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
+		txnDtlstmpsrc.setTxnamt(user.getAmount());
+		txnDtlstmpsrc.setTxncrdracntid(cdDest.getAcntId());
+		txnDtlstmpsrc.setTxncrdrbnknm(cdDest.getBankNm());
+		txnDtlstmpsrc.setTxnacntid(cdSrc.getAcntId());
+		txnDtlstmpsrc.setTxnflg("DR");
+		txnDtlstmpsrc.setTxntyp("B2B");
+		txnDtlstmpsrc.setTxnstat("Processed");
+
+		// our bank is credited
+		txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
+		txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
+		txnDtlstmpdest.setTxnamt(user.getAmount());
+		txnDtlstmpdest.setTxncrdracntid(cdSrc.getAcntId());
+		txnDtlstmpdest.setTxncrdrbnknm(cdSrc.getBankNm());
+		txnDtlstmpdest.setTxnacntid(cdDest.getAcntId());
+		txnDtlstmpdest.setTxnflg("CR");
+		txnDtlstmpdest.setTxntyp("B2B");
+		txnDtlstmpdest.setTxnstat("Processed");
+		
+		//amount added to dest accounts  to indicate whether we need to give(+) or take money from bank(-)	to dest account
+		cdSrc.setAmount(cdSrc.getAmount()+user.getAmount());
+		cdDest.setAmount(cdDest.getAmount()+user.getAmount());
+
+		cashDetailsDao.update(cdSrc);
+		cashDetailsDao.update(cdDest);
+		txnDtlsDao.create(txnDtlstmpsrc);
+		txnDtlsDao.create(txnDtlstmpdest);
+		
+		return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200 processed
 
 	}
 

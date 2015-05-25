@@ -57,7 +57,7 @@ public class AtmServiceImpl implements AtmService {
 			cashDetails = cashDetailsDao.get(3);
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			if(ualist.size()>0){
+			if(ualist!=null && ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
@@ -218,7 +218,7 @@ public class AtmServiceImpl implements AtmService {
 		// amount to be withdrawn will be in amt field
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			if(ualist.size()>0){
+			if(ualist!=null && ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
@@ -347,7 +347,7 @@ public class AtmServiceImpl implements AtmService {
 		UserAccount ua  ;
 		if(useraccount.getBnkname().equals("BANK4")){
 			List <UserAccount> ualist = userAccountDao.getUserByAcntId(useraccount.getAcntid());
-			if(ualist.size()>0){
+			if(ualist!=null && ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
