@@ -1,5 +1,8 @@
 package org.rwth.bbf4.configuration;
 
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -33,11 +38,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// Build the request matcher for CSFR protection
+		RequestMatcher csrfRequestMatcher = new RequestMatcher() {
+			// Disable CSRF protection on the following url and methods :
+			private AntPathRequestMatcher requestMatcher =
+					new AntPathRequestMatcher("/validate/**", null);
+			private Pattern allowedMethods = 
+					Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
 
-		http.authorizeRequests()				
-		.antMatchers("/validate/**").access("hasIpAddress('137.226.112.106')")
-		//.access("hasIpAddress('137.226.112.105') or hasIpAddress('137.226.112.104') or hasIpAddress('137.226.112.106') or hasIpAddress('137.226.112.108') or hasIpAddress('137.226.112.109') or  hasIpAddress('137.226.112.110') or hasIpAddress('137.226.112.92')  or hasIpAddress('137.226.112.92')")
-		.antMatchers("/emp/**").hasAnyAuthority("EMPL","ADMN")
+			@Override
+			public boolean matches(HttpServletRequest request) {
+				// method matches
+				if (allowedMethods.matcher(request.getMethod()).matches()) {
+					return false;
+				}
+				// If the request match one url the CSRF protection will be disabled
+				if(requestMatcher.matches(request))
+					return false;
+				return true;
+			} 
+		}; // new RequestMatcher
+
+
+		http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher)
+		.and()
+		.authorizeRequests().antMatchers("/emp/**").hasAnyAuthority("EMPL","ADMN")
 		.antMatchers("/onln/**").hasAuthority("CUST")
 		.antMatchers("/","/atmbank/**","/login/**","/logout/**","/register/**","/resources/**","/validate/**").permitAll()
 		.anyRequest().authenticated()
@@ -47,13 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher( "/logout" )).logoutSuccessUrl("/login?logout").permitAll().invalidateHttpSession(true).deleteCookies("JSESSIONID")	
 		.and()
-		.exceptionHandling().accessDeniedPage("/403")			
-//		.and()
-//		.requiresChannel().antMatchers("/**").requiresSecure()
-		.and()		
-		.csrf().disable()
-//		.and()
-//		.sessionManagement().maximumSessions( 1 )
+		.exceptionHandling().accessDeniedPage("/403")
+		//		.and()
+		//		.requiresChannel().antMatchers("/**").requiresSecure()
+		//		.and()
+		//		.sessionManagement().maximumSessions( 1 )
 		;
 	}
 	@Bean
