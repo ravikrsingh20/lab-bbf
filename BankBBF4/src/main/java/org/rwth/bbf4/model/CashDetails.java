@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Stores User Account Details
@@ -21,31 +20,39 @@ public class CashDetails {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name = "CD_ID")
 	private int id;
-	@Column(name = "CD_SRC_NAME", length = 20)
-	private String srcname;
-	@Column(name = "CD_DEST_NAME", length = 20)
-	private String destname;
+	@Column(name = "CD_ACNT_ID", length = 12)
+	private String acntId;
+	@Column(name = "CD_BNK_NAME", length = 20)
+	private String bankNm;
 	@Column(name = "CD_CR_DR", length = 2)
 	private String crdrflg;
 	@Column(name = "CDA_AMT")
 	private double amount;
+	@Transient
+	private String msg;
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getSrcname() {
-		return srcname;
+	public String getAcntId() {
+		return acntId;
 	}
-	public void setSrcname(String srcname) {
-		this.srcname = srcname;
+	public void setAcntId(String acntId) {
+		this.acntId = acntId;
 	}
-	public String getDestname() {
-		return destname;
+	public String getBankNm() {
+		return bankNm;
 	}
-	public void setDestname(String destname) {
-		this.destname = destname;
+	public void setBankNm(String bankNm) {
+		this.bankNm = bankNm;
 	}
 	public String getCrdrflg() {
 		return crdrflg;
@@ -60,5 +67,4 @@ public class CashDetails {
 		this.amount = amount;
 	}
 	
-
 }

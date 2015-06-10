@@ -5,14 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css"	href="<c:url value="/resources/css/style.css" />">
-<title>Transaction log</title>
+<title>ATM Transaction log</title>
 </head>
 <body>
 	<%@ include file="header.jsp"%>
 	<h1>
-		Transaction log for Account :
-		<c:out value="${UserAccount.acntid}" /><br>
-		Current Balance is <c:out value="${UserAccount.balance}" />
+		Transaction log for ATM :
+		<c:out value="${UserAccount.atmname}" />
+		<c:out value="${UserAccount.msg}" />
 	</h1>
 	<div>
 		<table align="center">
@@ -33,8 +33,8 @@
 			</c:forEach>
 			<tr>
 				<td colspan="4" align = "center"><font color="white" size="5px"> <a
-						href="/bbf4/onln"><font color="white">
-								Back to Online Banking</font></a></font></td>
+						href="/bbf4/emp"><font color="white">
+								Back to Employee Banking</font></a></font></td>
 			</tr>
 
 		</table>

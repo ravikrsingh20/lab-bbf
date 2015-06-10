@@ -1,7 +1,6 @@
 package org.rwth.bbf4.dao;
 
 import java.io.Serializable;
-import java.util.List;
 
 public interface Dao<T extends Object> {
 	void create(T t);

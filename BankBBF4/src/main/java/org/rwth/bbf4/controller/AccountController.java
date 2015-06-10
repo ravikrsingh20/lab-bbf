@@ -18,7 +18,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
 
 @Controller
 public class AccountController {
@@ -63,10 +62,17 @@ public class AccountController {
 		UserAccount ua = new UserAccount();
 		 if (!result.hasErrors()) {
 			 ua = service.createUserAccount(useraccount);
-		    }		
+		    }	else {
+		    	model.addAttribute("userAccount", useraccount);
+		    	return "register";	
+		    }
 			model.addAttribute("userAccount", ua);
 		return "regsuccess";
 	}
-
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public String accessdenied(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		return "403";
+	}
 
 }

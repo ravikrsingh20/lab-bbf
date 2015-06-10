@@ -4,19 +4,19 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css"	href="<c:url value="/resources/css/style.css" />">
-<title>Online Banking</title>
+<title>B2B Banking</title>
 </head>
 <body>
 	<%@ include file="header.jsp"%>
 	<div align="center">
 		<table align="center">
 			<tr>
-				<td><c:out value="${UserAccount.msg}" /></td>
+				<td><c:out value="${TxnDtls.msg}" /></td>
 			</tr>
 			<tr>
 				<td><font color="white" size="5px"> <a
-						href="/bbf4/onln"><font color="white">
-								Back to Online Banking</font></a></font></td>
+						href="/bbf4/emp"><font color="white">
+								Back to Employee Banking</font></a></font></td>
 			</tr>
 		</table>
 	</div>

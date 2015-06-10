@@ -1,13 +1,11 @@
 package org.rwth.bbf4.controller;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.rwth.bbf4.model.JsonTxnDtls;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.rwth.bbf4.service.AtmService;
@@ -21,7 +19,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Handles requests for the ATM banking.
@@ -43,7 +40,7 @@ public class AtmBnkController {
 
 		return "atmpage";
 	}
-
+	
 	@RequestMapping(value = "/atmbank/cashwithdrawl", method = RequestMethod.GET)
 	public String getWithdrawCash(Model model) {
 		model.addAttribute("UserAccount",new UserAccount());
@@ -55,25 +52,28 @@ public class AtmBnkController {
 		//useraccount is not null and has bankname and atm name
 		UserAccount ua = new UserAccount();
 		// check if balance is not 0
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit pin");
-			model.addAttribute("UserAccount",ua);	
-			return "cashwithdrawlpage";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit pin");
+				model.addAttribute("UserAccount",ua);	
+				return "cashwithdrawlpage";
 
-		}
+			}
 
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban number");
-			model.addAttribute("UserAccount",ua);	
-			return "cashwithdrawlpage";
-		}
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban number");
+				model.addAttribute("UserAccount",ua);	
+				return "cashwithdrawlpage";
+			}
 
-		if(useraccount.getAmt() == 0){	
-			ua.setMsg("Enter some amount to withdraw");
-			model.addAttribute("UserAccount",ua);
-			return "cashwithdrawlpage";
+			if(useraccount.getAmt() == 0){	
+				ua.setMsg("Enter some amount to withdraw");
+				model.addAttribute("UserAccount",ua);
+				return "cashwithdrawlpage";
 
-		} 					
+			} 	
+			
+		}						
 
 		ua = atmService.withdrawCash(useraccount);				
 		model.addAttribute("userAccount", ua);	
@@ -93,30 +93,48 @@ public class AtmBnkController {
 		List<TxnDtls> txndtlslist = new ArrayList<TxnDtls>();	
 		UserAccount ua = new UserAccount();		
 		// checks msg if there is some error msg like pin doesnot match
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit atm pin");
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit atm pin");
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage";
 
-		}
+			}
 
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban no.");
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage";
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban no.");
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage";
+			}
+			//get log
+			txndtlslist = atmService.getTxnDtlsAtm(useraccount);
+			if (useraccount.getMsg().equals("OK")) {
+				model.addAttribute("TxnDtlsList", txndtlslist );
+				model.addAttribute("UserAccount", useraccount );
+				return "showtxnlogpage";
+			}			
+			else{
+				ua.setMsg(useraccount.getMsg());
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage"; 
+			}
+			
+		}	else {
+			List<JsonTxnDtls> jsontxndtlslist = atmService.getTxnDtlsAtmOB(useraccount);
+			if (useraccount.getMsg().equals("OK")) {
+				model.addAttribute("JsonTxnDtlsList", jsontxndtlslist );
+				model.addAttribute("UserAccount", useraccount );
+				return "showtxnlogpageob";
+			}			
+			else{
+				ua.setMsg(useraccount.getMsg());
+				model.addAttribute("UserAccount", ua );
+				return "readtxnlogpage"; 
+			}
+			
 		}
-		//get log
-		txndtlslist = atmService.getTxnDtlsAtm(useraccount);
-		if (useraccount.getMsg().equals("OK")) {
-			model.addAttribute("TxnDtlsList", txndtlslist );
-			model.addAttribute("UserAccount", useraccount );
-			return "showtxnlogpage";
-		}			
-		else{
-			ua.setMsg(useraccount.getMsg());
-			model.addAttribute("UserAccount", ua );
-			return "readtxnlogpage"; 
-		}
+		
+		
 
 	}
 
@@ -131,19 +149,23 @@ public class AtmBnkController {
 		//useraccount is not null and has bankname and atm name
 		UserAccount ua = new UserAccount();
 		// check if balance is not 0
-		if (useraccount.getAtmpin().length() != 4){
-			ua.setMsg("Enter 4 digit pin");
-			model.addAttribute("UserAccount",ua);	
-			return "viewbalance";
+		if(useraccount.getBnkname().equals("BANK4")){
+			if (useraccount.getAtmpin().length() != 4){
+				ua.setMsg("Enter 4 digit pin");
+				model.addAttribute("UserAccount",ua);	
+				return "viewbalance";
 
+			}
+
+			if (useraccount.getAcntid().length() != 12){
+				ua.setMsg("Enter 12 digit iban number");
+				model.addAttribute("UserAccount",ua);	
+				return "viewbalance";
+			}				
+
+			
 		}
-
-		if (useraccount.getAcntid().length() != 12){
-			ua.setMsg("Enter 12 digit iban number");
-			model.addAttribute("UserAccount",ua);	
-			return "viewbalance";
-		}				
-
+		
 		ua = atmService.viewBalance(useraccount);				
 		model.addAttribute("userAccount", ua);	
 		return "showbalance";	

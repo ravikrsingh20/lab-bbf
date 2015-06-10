@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
-<%@ page session="true"%>
+<%@ page session="false"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -12,29 +12,26 @@
 	<h1>
 		Transaction log for Account :
 		<c:out value="${UserAccount.acntid}" /><br>
-		Current Balance is <c:out value="${UserAccount.balance}" />
 	</h1>
 	<div>
 		<table align="center">
 			<tr>
-				<td align="center">Transaction Id</td>
 				<td align="center">Execution Date</td>
 				<td align="center">Amount</td>
 				<td align="center">Message</td>
 			</tr>
 
-			<c:forEach items="${TxnDtlsList}" var="txnDtls">
+			<c:forEach items="${JsonTxnDtlsList}" var="txnDtls">
 				<tr>
-					<td><c:out value="${txnDtls.txnid}" /></td>
-					<td><c:out value="${txnDtls.execdt}" /></td>
-					<td><c:out value="${txnDtls.txnamt}" /></td>
-					<td><c:out value="${txnDtls.msg}" /></td>
+					<td><c:out value="${txnDtls.execDate}" /></td>
+					<td><c:out value="${txnDtls.amount}" /></td>
+					<td><c:out value="${txnDtls.message}" /></td>
 				</tr>
 			</c:forEach>
-			<tr>
-				<td colspan="4" align = "center"><font color="white" size="5px"> <a
-						href="/bbf4/onln"><font color="white">
-								Back to Online Banking</font></a></font></td>
+	<tr>
+				<td colspan="3" align = "center"><font color="white" size="5px"> <a
+						href="/bbf4/atmbank"><font color="white">
+								Back to Atm Page</font></a></font></td>
 			</tr>
 
 		</table>

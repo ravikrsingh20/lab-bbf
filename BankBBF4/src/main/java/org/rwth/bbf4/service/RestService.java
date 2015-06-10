@@ -7,9 +7,11 @@ import org.rwth.bbf4.model.JsonUser;
 import org.springframework.http.ResponseEntity;
 
 public interface RestService {
-	ResponseEntity<JsonUser> cashWithdraw(JsonUser user);
-	ResponseEntity<JsonUser> viewBal(JsonUser user);
-	ResponseEntity<List<JsonTxnDtls>> readTxn(JsonUser user);
+	public ResponseEntity<JsonUser> cashWithdraw(JsonUser user);
+	public ResponseEntity<JsonUser> viewBal(JsonUser user);
+	public ResponseEntity<JsonUser> plcwrtrnsfr(JsonUser user);
+	public ResponseEntity<JsonUser> lendMoney(JsonUser user);
+	public ResponseEntity<List<JsonTxnDtls>> readTxn(JsonUser user);
 	public ResponseEntity<JsonUser> validate(JsonUser user) ;
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user);
 

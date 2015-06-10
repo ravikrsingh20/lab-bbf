@@ -11,7 +11,7 @@
 	<%@ include file="header.jsp"%>
 	<h1>
 		View Balance.
-		<c:out value="${userAccount.msg}" />
+		<c:out value="${UserAccount.msg}" />
 	</h1>
 	<div>
 		<sf:form method="POST" commandName="UserAccount" action="/bbf4/atmbank/viewbal">

@@ -15,7 +15,7 @@
 		<mysql.version>5.1.31</mysql.version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
-		<jackson.version>1.9.10</jackson.version>
+		<jackson.version>2.3.3</jackson.version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -34,7 +34,7 @@
 			<artifactId>spring-web</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
@@ -111,11 +111,18 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- Jackson JSON Mapper -->
+		
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -164,9 +171,9 @@
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.2</version>		
+			<version>1.2</version>
 		</dependency>
-	
+
 
 		<!-- Test -->
 		<dependency>
@@ -201,7 +208,13 @@
 		</dependency>
 	</dependencies>
 
-
+	<repositories>
+		<repository>
+			<id>maven-repos</id>
+			<name>Glassfish Repos</name>
+			<url> http://maven.java.net</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>

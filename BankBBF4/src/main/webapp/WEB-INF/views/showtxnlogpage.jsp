@@ -11,7 +11,8 @@
 	<%@ include file="header.jsp"%>
 	<h1>
 		Transaction log for Account :
-		<c:out value="${UserAccount.acntid}" />
+		<c:out value="${UserAccount.acntid}" /><br>
+		Current Balance is <c:out value="${UserAccount.balance}" />
 	</h1>
 	<div>
 		<table align="center">
@@ -30,7 +31,11 @@
 					<td><c:out value="${txnDtls.msg}" /></td>
 				</tr>
 			</c:forEach>
-
+	<tr>
+				<td colspan="4" align = "center"><font color="white" size="5px"> <a
+						href="/bbf4/atmbank"><font color="white">
+								Back to Atm Page</font></a></font></td>
+			</tr>
 
 		</table>
 	</div>
