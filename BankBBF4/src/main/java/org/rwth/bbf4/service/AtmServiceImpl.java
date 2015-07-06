@@ -63,7 +63,9 @@ public class AtmServiceImpl implements AtmService {
 					PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 					if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
 						// password matches
-						if (ua.getBalance() >= useraccount.getAmt() ){						
+						if(!ua.isAtmenabled()){
+							useraccount.setMsg("Sorry!! ATM Account Disabled");
+						}else if (ua.getBalance() >= useraccount.getAmt() ){						
 							int id=0 ;
 
 							if(cashDetails.getAmount() >= useraccount.getAmt()){
@@ -109,6 +111,7 @@ public class AtmServiceImpl implements AtmService {
 						}
 					}
 					else {
+						this.updateWrongAttempt(ua);
 						useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 					}
 				}
@@ -224,7 +227,9 @@ public class AtmServiceImpl implements AtmService {
 			if(ualist!=null && ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+				if(!ua.isAtmenabled()){
+					useraccount.setMsg("Sorry!! ATM Account Disabled");
+				}else if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
 					//get all txn details from db
 					txndtlsList = txnDtlsDao.getTxnDtlsAtm(useraccount);
 					// send only amount message (credit/debit from etc) exec date,
@@ -273,6 +278,7 @@ public class AtmServiceImpl implements AtmService {
 
 				}
 				else {
+					this.updateWrongAttempt(ua);
 					useraccount.setMsg("Sorry!! ATM Pin Doesnot match");
 
 				}
@@ -359,11 +365,16 @@ public class AtmServiceImpl implements AtmService {
 			if(ualist!=null && ualist.size()>0){
 				ua = ualist.get(0);
 				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-				if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
+				if(!ua.isAtmenabled()){
+					useraccount.setMsg("Sorry!! ATM Account Disabled");
+				}else if (passwordEncoder.matches(useraccount.getAtmpin(), ua.getAtmpin())){
 					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+ua.getBalance());
 				}
-				else
-					useraccount.setMsg("ATM Pin and Account no. doesnot match");	
+				else{
+					this.updateWrongAttempt(ua);
+					useraccount.setMsg("ATM Pin and Account no. doesnot match");
+				}
+						
 			}else{
 				useraccount.setMsg("Account doesnot exist");
 			}
@@ -412,6 +423,20 @@ public class AtmServiceImpl implements AtmService {
 
 		}
 		return useraccount;
+	}
+	@Override
+	public boolean validateAccount(UserAccount useraccount) {
+		// TODO Auto-generated method stub
+		if(useraccount.getWrongattempt()>=3){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public void updateWrongAttempt(UserAccount useraccount){
+		useraccount.setWrongattempt(useraccount.getWrongattempt()+1);
+		userAccountDao.update(useraccount);
+		
 	}
 
 }

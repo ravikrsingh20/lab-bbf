@@ -78,5 +78,9 @@ public class AccountController {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		return "403";
 	}
+	@RequestMapping(value = "/error", method = RequestMethod.GET)
+	public String error() {
+		return "error";
+	}
 
 }

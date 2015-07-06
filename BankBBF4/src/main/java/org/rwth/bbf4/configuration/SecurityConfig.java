@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
@@ -73,10 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.logout().logoutRequestMatcher(new AntPathRequestMatcher( "/logout" )).logoutSuccessUrl("/login?logout").permitAll().invalidateHttpSession(true).deleteCookies("JSESSIONID")	
 		.and()
 		.exceptionHandling().accessDeniedPage("/403")
-		//		.and()
-		//		.requiresChannel().antMatchers("/**").requiresSecure()
-		//		.and()
-		//		.sessionManagement().maximumSessions( 1 )
+		.and()
+		.sessionManagement().maximumSessions( 1 )
 		;
 	}
 	@Bean

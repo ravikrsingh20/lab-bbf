@@ -68,6 +68,12 @@ public class UserAccount {
 	
 	@Column(name = "UA_ENABLED")
 	private boolean enabled;
+	
+	@Column(name = "UA_ATM_ENABLED")
+	private boolean atmenabled = true;
+	
+	@Column(name = "UA_WRONG_ATTEMPT")
+	private int wrongattempt = 0;
 	@Transient
 	private double amt;
 	@Transient
@@ -173,6 +179,18 @@ public class UserAccount {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public boolean isAtmenabled() {
+		return atmenabled;
+	}
+	public void setAtmenabled(boolean atmenabled) {
+		this.atmenabled = atmenabled;
+	}
+	public int getWrongattempt() {
+		return wrongattempt;
+	}
+	public void setWrongattempt(int wrongattempt) {
+		this.wrongattempt = wrongattempt;
 	}
 	
 

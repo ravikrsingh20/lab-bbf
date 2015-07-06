@@ -61,7 +61,7 @@ public class AtmBnkController {
 			}
 
 			if (useraccount.getAcntid().length() != 12){
-				ua.setMsg("Enter 12 digit iban number");
+				ua.setMsg("Invalid iban number");
 				model.addAttribute("UserAccount",ua);	
 				return "cashwithdrawlpage";
 			}
@@ -102,7 +102,7 @@ public class AtmBnkController {
 			}
 
 			if (useraccount.getAcntid().length() != 12){
-				ua.setMsg("Enter 12 digit iban no.");
+				ua.setMsg("Invalid iban no.");
 				model.addAttribute("UserAccount", ua );
 				return "readtxnlogpage";
 			}
@@ -158,7 +158,7 @@ public class AtmBnkController {
 			}
 
 			if (useraccount.getAcntid().length() != 12){
-				ua.setMsg("Enter 12 digit iban number");
+				ua.setMsg("Invalid iban number");
 				model.addAttribute("UserAccount",ua);	
 				return "viewbalance";
 			}				
