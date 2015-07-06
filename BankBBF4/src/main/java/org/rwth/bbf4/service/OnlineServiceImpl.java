@@ -412,36 +412,7 @@ public class OnlineServiceImpl implements OnlineService{
 						return txndtls;
 					}
 					if(cdSrc.getAmount()> useraccount.getAmt())	{
-						cdSrc.setAmount(cdSrc.getAmount()-useraccount.getAmt());
-						cdDest.setAmount(cdDest.getAmount()-useraccount.getAmt());
-
-						// create and entry for CR leg where other bank account is credited					
-						txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
-						txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
-						txnDtlstmpsrc.setTxnamt(useraccount.getAmt());
-						txnDtlstmpsrc.setTxncrdracntid(cdDest.getAcntId());
-						txnDtlstmpsrc.setTxncrdrbnknm(cdDest.getBankNm());
-						txnDtlstmpsrc.setTxnacntid(cdSrc.getAcntId());
-						txnDtlstmpsrc.setTxnflg("CR");
-						txnDtlstmpsrc.setTxntyp("B2B");
-						txnDtlstmpsrc.setTxnstat("Processed");
-
-						// our bank is debited
-						txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
-						txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
-						txnDtlstmpdest.setTxnamt(useraccount.getAmt());
-						txnDtlstmpdest.setTxncrdracntid(cdSrc.getAcntId());
-						txnDtlstmpdest.setTxncrdrbnknm(cdSrc.getBankNm());
-						txnDtlstmpdest.setTxnacntid(cdDest.getAcntId());
-						txnDtlstmpdest.setTxnflg("DR");
-						txnDtlstmpdest.setTxntyp("B2B");
-						txnDtlstmpdest.setTxnstat("Processed");
-
-						cashDetailsDao.update(cdSrc);
-						cashDetailsDao.update(cdDest);
-						txnDtlsDao.create(txnDtlstmpsrc);
-						txnDtlsDao.create(txnDtlstmpdest);
-						txndtls.setMsg("Wire Transfer Request completed successfully.");
+						
 						//call other bank webservice to send money
 						if(useraccount.getBnkname().equals("BANK1")){
 
@@ -450,14 +421,44 @@ public class OnlineServiceImpl implements OnlineService{
 						}else if(useraccount.getBnkname().equals("BANK3")){
 							RestTemplate restTemplate = new RestTemplate();
 							JsonUser user = new JsonUser();
-							user.setAmount(txndtls.getTxnamt());
-							user.setSrcAcntId(txndtls.getTxnacntid());
-							user.setDestAcntId(txndtls.getTxncrdracntid());
+							user.setAmount(useraccount.getAmt());
+							user.setSrcAcntId(srcBnkAcntId);
+							user.setDestAcntId("100000000");
 							user.setSrcBnkNm("BANK4");
 							ResponseEntity<JsonUser> userReturn;
-							userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/lendMoney/format/json", user, JsonUser.class);
+							userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
 							if(userReturn.getStatusCode() == HttpStatus.OK){
 								txndtls.setMsg("Wire Transfer Request completed successfully. with bank 3");
+								cdSrc.setAmount(cdSrc.getAmount()-useraccount.getAmt());
+								cdDest.setAmount(cdDest.getAmount()-useraccount.getAmt());
+
+								// create and entry for CR leg where other bank account is credited					
+								txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
+								txnDtlstmpsrc.setOrddt(new Timestamp(date.getTime()));
+								txnDtlstmpsrc.setTxnamt(useraccount.getAmt());
+								txnDtlstmpsrc.setTxncrdracntid(cdDest.getAcntId());
+								txnDtlstmpsrc.setTxncrdrbnknm(cdDest.getBankNm());
+								txnDtlstmpsrc.setTxnacntid(cdSrc.getAcntId());
+								txnDtlstmpsrc.setTxnflg("CR");
+								txnDtlstmpsrc.setTxntyp("B2B");
+								txnDtlstmpsrc.setTxnstat("Processed");
+
+								// our bank is debited
+								txnDtlstmpdest.setExecdt(new Timestamp(date.getTime()));
+								txnDtlstmpdest.setOrddt(new Timestamp(date.getTime()));
+								txnDtlstmpdest.setTxnamt(useraccount.getAmt());
+								txnDtlstmpdest.setTxncrdracntid(cdSrc.getAcntId());
+								txnDtlstmpdest.setTxncrdrbnknm(cdSrc.getBankNm());
+								txnDtlstmpdest.setTxnacntid(cdDest.getAcntId());
+								txnDtlstmpdest.setTxnflg("DR");
+								txnDtlstmpdest.setTxntyp("B2B");
+								txnDtlstmpdest.setTxnstat("Processed");
+
+								cashDetailsDao.update(cdSrc);
+								cashDetailsDao.update(cdDest);
+								txnDtlsDao.create(txnDtlstmpsrc);
+								txnDtlsDao.create(txnDtlstmpdest);
+								txndtls.setMsg("Wire Transfer Request completed successfully.");
 							}else {
 								txndtls.setMsg("Wire Transfer Request failed with bank 3");
 							}

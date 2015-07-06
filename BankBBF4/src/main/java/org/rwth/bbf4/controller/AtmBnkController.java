@@ -51,7 +51,7 @@ public class AtmBnkController {
 		// check if balance is not 0
 		if(useraccount.getBnkname().equals("BANK4")){
 			if (useraccount.getAtmpin().length() != 4){
-				ua.setMsg("Enter 4 digit pin");
+				ua.setMsg("Invalid ATM pin");
 				model.addAttribute("UserAccount",ua);	
 				return "cashwithdrawlpage";
 
@@ -92,7 +92,7 @@ public class AtmBnkController {
 		// checks msg if there is some error msg like pin doesnot match
 		if(useraccount.getBnkname().equals("BANK4")){
 			if (useraccount.getAtmpin().length() != 4){
-				ua.setMsg("Enter 4 digit atm pin");
+				ua.setMsg("Invalid ATM pin");
 				model.addAttribute("UserAccount", ua );
 				return "readtxnlogpage";
 
@@ -148,8 +148,8 @@ public class AtmBnkController {
 		// check if balance is not 0
 		if(useraccount.getBnkname().equals("BANK4")){
 			if (useraccount.getAtmpin().length() != 4){
-				ua.setMsg("Enter 4 digit pin");
-				model.addAttribute("UserAccount",ua);	
+				ua.setMsg("Invalid ATM pin");
+				model.addAttribute("UserAccount",ua);					
 				return "viewbalance";
 
 			}
