@@ -38,10 +38,11 @@ create table TXN_DTLS (
         TXN_TYP varchar(255),
         primary key (TXN_ID)
     );
-create table USER_ACNT (
+ create table USER_ACNT (
         Id bigint not null auto_increment,
         UA_ACNT_ID varchar(12),
         UA_ADDRESS varchar(30),
+        UA_ATM_ENABLED bit,
         UA_ATM_PIN varchar(255),
         UA_BALANCE double precision,
         UA_EMAIL varchar(30) not null,
@@ -51,8 +52,9 @@ create table USER_ACNT (
         UA_ONLN_PIN varchar(255),
         UA_PASSWD varchar(255),
         UA_PHN_NO varchar(13),
+        UA_WRONG_ATTEMPT integer,
         primary key (Id)
-    );
+    )
 alter table USER_ACNT 
         add constraint UK_bboqn4ac98ne2w8krq95ao1ot  unique (UA_ACNT_ID);
  alter table USER_ACNT 

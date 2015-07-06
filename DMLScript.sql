@@ -15,15 +15,15 @@ INSERT INTO `bank4_db`.`USER_ACNT`(`Id`,`UA_ACNT_ID`,`UA_ADDRESS`,`UA_ATM_PIN`,`
 VALUES(6,'BNK494000003','aachen','',0,'emp3@bank4.com',1,'Employee3','Employee3','$2a$10$Qk.UeMG/4YW3IEc4pXsDMOyMuf4s7uMOBbe/4G1kmJ5Iye74vfQwK','','+491111111111');
 
 --stores cash details for atms of our bank and corresponding account numbers.
-insert into CASH_DTLS values (1,'BNK494000001',10000000,'ATM1','CR');
-insert into CASH_DTLS values (2,'BNK494000002',10000000,'ATM2','CR');
-insert into CASH_DTLS values (3,'BNK494000003',10000000,'ATM3','CR');
+insert into CASH_DTLS values (1,'BNK494000001',100000,'ATM1','CR');
+insert into CASH_DTLS values (2,'BNK494000002',100000,'ATM2','CR');
+insert into CASH_DTLS values (3,'BNK494000003',100000,'ATM3','CR');
 
 --stores cash details for each bank each identified by a unique account no
 insert into CASH_DTLS values (101,'BNK491000000',0,'Bank1','CR');
 insert into CASH_DTLS values (102,'BNK492000000',0,'Bank2','CR');
 insert into CASH_DTLS values (103,'BNK493000000',0,'Bank3','CR');
-insert into CASH_DTLS values (104,'BNK494000000',100000000,'Bank4','CR');
+insert into CASH_DTLS values (104,'BNK494000000',1000000,'Bank4','CR');
 insert into CASH_DTLS values (105,'BNK495000000',0,'Bank5','CR');
 insert into CASH_DTLS values (106,'BNK496000000',0,'Bank6','CR');
 insert into CASH_DTLS values (107,'BNK497000000',0,'Bank7','CR');
@@ -53,5 +53,7 @@ insert into ACNT_ROLE values (11,'BNK496000000','BANK',4);
 insert into ACNT_ROLE values (12,'BNK497000000','BANK',4);
 insert into ACNT_ROLE values (13,'BNK498000000','BANK',4);
 insert into ACNT_ROLE values (14,'BNK499000000','BANK',4);
+
+ update USER_ACNT set UA_WRONG_ATTEMPT=0,UA_ATM_ENABLED=1;
 
 commit;
