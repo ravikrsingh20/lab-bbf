@@ -1,5 +1,7 @@
 package org.rwth.bbf4.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.rwth.bbf4.dao.CashDetailsDao;
@@ -27,8 +29,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 	public UserAccount createUserAccount(UserAccount useraccount) {
 		// TODO Auto-generated method stub	
 		UserAccount ua ;
+		List <UserAccount> ualist = userAccountDao.getUserByEmailId(useraccount.getEmail());
+		if(ualist!=null && ualist.size()>0){
+			useraccount.setMsg("Sorry!! Email already exists");			
+			return useraccount;
+		}		
 		userAccountDao.create(useraccount);
-		ua = authorizeUserAccount(useraccount);
+		ua = authorizeUserAccount(useraccount);		
 		return ua;
 	}
 
@@ -62,12 +69,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 		useraccount.setAtmpin(passwordEncoder.encode(useraccount.getAtmpin())); 
 		useraccount.setOnlnpin(passwordEncoder.encode(useraccount.getOnlnpin()));
 		userAccountDao.update(useraccount);
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#1"));
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#2"));
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#3"));
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#1"));
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#2"));
-//		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#3"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#1"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#2"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssAdm9#3"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#1"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#2"));
+		System.out.println(passwordEncoder.encode("B@nk4P@ssEmp9#3"));
 		
 		//update account_role table
 		ar.setAcntId(useraccount.getAcntid());

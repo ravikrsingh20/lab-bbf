@@ -20,6 +20,11 @@ public class UserAccountDaoImpl extends AbstractDao<UserAccount> implements User
 				.getNamedQuery("getUserByAcntId")
 				.setString("acntid", acntid ).list();
 	}
+	@Override
+	public List<UserAccount> getUserByEmailId(String emailid) {
+		// TODO Auto-generated method stub
+		return (List<UserAccount>) getSession().createQuery("from UserAccount ua where ua.email = :emailId").setParameter("emailId", emailid).list();
+	}
 
 	@Override
 	public AccountRole createAccountRole(AccountRole ar) {

@@ -62,6 +62,10 @@ public class AccountController {
 		UserAccount ua = new UserAccount();
 		 if (!result.hasErrors()) {
 			 ua = service.createUserAccount(useraccount);
+			 if (ua.getMsg().contains("Sorry!!")){
+				 model.addAttribute("userAccount", useraccount);
+				 return "register";
+			 }
 		    }	else {
 		    	model.addAttribute("userAccount", useraccount);
 		    	return "register";	

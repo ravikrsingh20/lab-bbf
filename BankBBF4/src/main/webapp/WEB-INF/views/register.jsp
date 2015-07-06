@@ -10,6 +10,7 @@
 <body>
 	<%@ include file="header.jsp"%>
 	<h1>Register Your Account</h1>
+	<c:out value="${userAccount.msg}" />
 	<div>
 		<sf:form method="POST" commandName="UserAccount">
 			<sf:errors path="*" element="div" cssClass="errors" />

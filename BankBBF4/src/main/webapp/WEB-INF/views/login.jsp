@@ -29,7 +29,7 @@
 			</p>
 			<p>
 				<label for="password">Password</label> <input type="password"
-					id="password" name="password" />
+					id="password" name="password" autocomplete="off" />
 			</p>
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />

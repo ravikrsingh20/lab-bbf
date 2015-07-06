@@ -8,6 +8,7 @@ import org.rwth.bbf4.model.UserAccount;
 
 public interface UserAccountDao extends Dao<UserAccount>{
 	public List<UserAccount> getUserByAcntId(String acntid);
+	public List<UserAccount> getUserByEmailId(String emailid);
 	public AccountRole createAccountRole(AccountRole ar);
 	public String getAccountRoleByAcntId(String acntid);
 	public CashDetails getCashDetailsId(int id);
