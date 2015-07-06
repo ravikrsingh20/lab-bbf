@@ -49,7 +49,9 @@ public class RestServiceImpl implements RestService {
 
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
+			if(!ua.isAtmenabled()){
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist
+			}else if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				// password matches
 				if (ua.getBalance() >= user.getAmount() ){			
 					// dispense cash and update the balance in account
@@ -81,6 +83,7 @@ public class RestServiceImpl implements RestService {
 				}
 			}
 			else {
+				atmService.updateWrongAttempt(ua);
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
 
 			}
@@ -103,12 +106,16 @@ public class RestServiceImpl implements RestService {
 		if(ualist!=null && ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
+			if(!ua.isAtmenabled()){
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist
+			}else if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				user.setAmount(ua.getBalance());
 				return new ResponseEntity<JsonUser>(user,HttpStatus.OK); //200
 			}
-			else
+			else{
+				atmService.updateWrongAttempt(ua);
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401
+			}				
 		}
 		else {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404	
@@ -140,7 +147,9 @@ public class RestServiceImpl implements RestService {
 		if(ualist!=null && ualist.size()>0){
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
+			if(!ua.isAtmenabled()){
+				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.NOT_FOUND);//404
+			}else if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				//get all txn details from db
 				txndtlsList = txnDtlsDao.getTxnDtlsAtm(useraccount);
 				// send only amount message (credit/debit from etc) exec date,
@@ -187,7 +196,7 @@ public class RestServiceImpl implements RestService {
 
 			}
 			else {
-
+				atmService.updateWrongAttempt(ua);
 				return new ResponseEntity<List<JsonTxnDtls>>(jsonTxnDtlsList,HttpStatus.UNAUTHORIZED);//401
 
 			}
@@ -204,12 +213,16 @@ public class RestServiceImpl implements RestService {
 
 			ua = ualist.get(0);
 			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
+			if(!ua.isAtmenabled()){
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist
+			}else if (passwordEncoder.matches(user.getPin(), ua.getAtmpin())){
 				return new ResponseEntity<JsonUser>(user,HttpStatus.NO_CONTENT); //200
-
 			}
-			else
+			else{
+				atmService.updateWrongAttempt(ua);
 				return new ResponseEntity<JsonUser>(user,HttpStatus.UNAUTHORIZED); // 401 invalid pin
+			}
+				
 		}
 		else {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found
@@ -218,10 +231,12 @@ public class RestServiceImpl implements RestService {
 	}
 	@Override
 	public ResponseEntity<JsonUser> validateAccountId(JsonUser user) {
-		UserAccount ua  ;
 		List <UserAccount> ualist = userAccountDao.getUserByAcntId(user.getCardNumber());
 		if(ualist!=null && ualist.size()>0){
-			return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
+			if(!ualist.get(0).isAtmenabled()){
+				return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account doesnot exist
+			}else
+				return new ResponseEntity<JsonUser>(user,HttpStatus.OK); // 200 valid acnt id
 		}
 		else 
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 account not found

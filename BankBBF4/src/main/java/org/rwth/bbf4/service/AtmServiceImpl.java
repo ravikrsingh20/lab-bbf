@@ -424,17 +424,11 @@ public class AtmServiceImpl implements AtmService {
 		}
 		return useraccount;
 	}
-	@Override
-	public boolean validateAccount(UserAccount useraccount) {
-		// TODO Auto-generated method stub
-		if(useraccount.getWrongattempt()>=3){
-			return false;
-		}else{
-			return true;
-		}
-	}
+	
 	public void updateWrongAttempt(UserAccount useraccount){
 		useraccount.setWrongattempt(useraccount.getWrongattempt()+1);
+		if(useraccount.getWrongattempt() >= 5)
+			useraccount.setAtmenabled(false);
 		userAccountDao.update(useraccount);
 		
 	}
