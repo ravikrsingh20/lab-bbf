@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository("userAccountDao")
 public class UserAccountDaoImpl extends AbstractDao<UserAccount> implements UserAccountDao{
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserAccount> getUserByAcntId(String acntid) {
 		// TODO Auto-generated method stub
@@ -20,6 +21,7 @@ public class UserAccountDaoImpl extends AbstractDao<UserAccount> implements User
 				.getNamedQuery("getUserByAcntId")
 				.setString("acntid", acntid ).list();
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserAccount> getUserByEmailId(String emailid) {
 		// TODO Auto-generated method stub

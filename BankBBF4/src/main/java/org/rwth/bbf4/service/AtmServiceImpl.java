@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
 
@@ -41,8 +40,6 @@ public class AtmServiceImpl implements AtmService {
 		UserAccount ua  ;
 		CashDetails cdDest = new CashDetails();
 		TxnDtls txnDtls = new TxnDtls();
-		TxnDtls txnDtlstmpsrc = new TxnDtls();
-		TxnDtls txnDtlstmpdest = new TxnDtls();
 		CashDetails cdSrc = new CashDetails();
 		CashDetails cashDetails = new CashDetails();
 		java.util.Date date= new java.util.Date();
@@ -65,9 +62,7 @@ public class AtmServiceImpl implements AtmService {
 						// password matches
 						if(!ua.isAtmenabled()){
 							useraccount.setMsg("Sorry!! ATM Account Disabled");
-						}else if (ua.getBalance() >= useraccount.getAmt() ){						
-							int id=0 ;
-
+						}else if (ua.getBalance() >= useraccount.getAmt() ){
 							if(cashDetails.getAmount() >= useraccount.getAmt()){
 								// dispense cash and update the balance in account
 								ua.setBalance(ua.getBalance() - useraccount.getAmt());
@@ -217,9 +212,6 @@ public class AtmServiceImpl implements AtmService {
 
 		// TODO Auto-generated method stub	
 		UserAccount ua  ;
-		TxnDtls txnDtls = new TxnDtls();
-		CashDetails cashDetails = new CashDetails();
-		java.util.Date date= new java.util.Date();
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		if(useraccount.getBnkname().equals("BANK4")){

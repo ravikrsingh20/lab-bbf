@@ -32,10 +32,7 @@ implements Dao<T>{
 		}
 		return domainClass;
 	}
-	private String getDomainClassName() {
-		return getDomainClass().getName();
-	}
-
+	
 	@SuppressWarnings("unchecked")
 	public T get(Serializable id) {
 		return (T) getSession().get(getDomainClass(), id);

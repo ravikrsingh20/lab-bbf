@@ -49,7 +49,6 @@ public class BBF4AuthenticationSuccessHandler implements AuthenticationSuccessHa
     protected String determineTargetUrl(final Authentication authentication) {
         boolean isCust = false;
         boolean isEmpl = false;
-        boolean is = false;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
             if (grantedAuthority.getAuthority().equals("CUST")) {

@@ -3,13 +3,9 @@ package org.rwth.bbf4.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.rwth.bbf4.model.JsonTxnDtls;
 import org.rwth.bbf4.model.JsonUser;
 import org.rwth.bbf4.service.RestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class BNK4RestController {
-	private static final Logger logger = LoggerFactory.getLogger(BNK4RestController.class);
-
 	@Autowired
 	private RestService restService;
 	public BNK4RestController()
@@ -42,7 +36,7 @@ public class BNK4RestController {
 	@RequestMapping(value="/validate",method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> validate(@RequestBody  JsonUser user) {
-		  //JsonUser user = new JsonUser();
+		//JsonUser user = new JsonUser();
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.validate(user);
 		}
@@ -65,7 +59,7 @@ public class BNK4RestController {
 	@RequestMapping(value = "/validate/cashWithdraw", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> cashWithdraw( @RequestBody JsonUser user) {
-		
+
 		if(user.getCardNumber().substring(0, 4).equals("BNK4")){
 			return restService.cashWithdraw(user);
 		}
@@ -73,7 +67,7 @@ public class BNK4RestController {
 			return new ResponseEntity<JsonUser>(user,HttpStatus.NOT_FOUND); //404 status code
 
 	}	
-	
+
 	@RequestMapping(value = "/validate/viewBal", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> viewBal(@RequestBody  JsonUser user) {
@@ -99,7 +93,6 @@ public class BNK4RestController {
 	@RequestMapping(value = "/validate/plcwrtrns", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> placeWireTransfer(@RequestBody JsonUser user) {
-		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
 		if(user.getDestAcntId().substring(0, 4).equals("BNK4")){
 			if(user.getAmount()>0){
 				return restService.plcwrtrnsfr(user);				
@@ -108,28 +101,26 @@ public class BNK4RestController {
 				user.setMsg("Please Give Some amount to credit");
 				return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code				
 			}
-			
+
 		}
 		else{
 			user.setMsg("Account is not of our Bank");
 			return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code
 		}
-			
+
 
 	}
 	@RequestMapping(value = "/validate/lendMoney", method = RequestMethod.POST,produces = "application/json",consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<JsonUser> lendMoney(@RequestBody JsonUser user) {
-		List<JsonTxnDtls> jsonTxnDtlsList= new ArrayList<JsonTxnDtls>();
-		
-			if(user.getAmount()>0){
-				return restService.lendMoney(user);				
-			}
-			else{
-				user.setMsg("Please Give Some amount to credit");
-				return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code				
-			}			
-		
+		if(user.getAmount()>0){
+			return restService.lendMoney(user);				
+		}
+		else{
+			user.setMsg("Please Give Some amount to credit");
+			return new ResponseEntity<JsonUser> (user,HttpStatus.NOT_FOUND); //404 status code				
+		}			
+
 	}
 
 

@@ -16,6 +16,7 @@ public class CashDetailsDaoImpl extends AbstractDao<CashDetails> implements Cash
 
 		return cashdetails;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CashDetails> findAll() {
 		return (List<CashDetails>) getSession().createQuery("from CashDetails").list();

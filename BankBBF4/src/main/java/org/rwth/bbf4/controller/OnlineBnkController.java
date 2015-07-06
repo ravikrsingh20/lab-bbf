@@ -8,8 +8,6 @@ import org.rwth.bbf4.model.CashDetails;
 import org.rwth.bbf4.model.TxnDtls;
 import org.rwth.bbf4.model.UserAccount;
 import org.rwth.bbf4.service.OnlineService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class OnlineBnkController {
-	private static final Logger logger = LoggerFactory.getLogger(OnlineBnkController.class);
 	@Autowired
 	private OnlineService onlnService;
 	public OnlineBnkController()

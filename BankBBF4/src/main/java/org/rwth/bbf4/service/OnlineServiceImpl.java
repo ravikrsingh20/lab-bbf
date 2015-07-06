@@ -239,9 +239,6 @@ public class OnlineServiceImpl implements OnlineService{
 
 		// TODO Auto-generated method stub	
 		UserAccount ua  ;
-		TxnDtls txnDtls = new TxnDtls();
-		CashDetails cashDetails = new CashDetails();
-		java.util.Date date= new java.util.Date();
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
 		if(useraccount.getAcntid().substring(0, 4).equals("BNK4")){
@@ -310,9 +307,6 @@ public class OnlineServiceImpl implements OnlineService{
 		// need to write a query to get txn dtls for particular bank acnt id and 
 
 		UserAccount ua  ;
-		TxnDtls txnDtls = new TxnDtls();
-		CashDetails cashDetails = new CashDetails();
-		java.util.Date date= new java.util.Date();
 		//	check if the user has sufficient privilege
 		String role = userAccountDao.getAccountRoleByAcntId(useraccount.getAcntid());
 		if(role.equalsIgnoreCase("EMPL") || role.equalsIgnoreCase("ADMN")){

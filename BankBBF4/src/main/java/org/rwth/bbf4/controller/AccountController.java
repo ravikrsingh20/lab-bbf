@@ -1,7 +1,5 @@
 package org.rwth.bbf4.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.validation.Valid;
@@ -37,16 +35,8 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String showRegisterForm(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("UserAccount", new UserAccount() );
-		
+	public String showRegisterForm(Locale locale, Model model) {			
+		model.addAttribute("UserAccount", new UserAccount() );		
 		return "register";
 	}
 	

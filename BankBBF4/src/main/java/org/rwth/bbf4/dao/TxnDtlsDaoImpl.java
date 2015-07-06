@@ -17,6 +17,7 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TxnDtls> getTxnDtlsOnln(UserAccount useraccount) {
 		// TODO Auto-generated method stub
@@ -25,6 +26,7 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 				.setString("acntid", useraccount.getAcntid() ).list();	
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TxnDtls> getTxnDtlsAtm(UserAccount useraccount) {
 		// TODO Auto-generated method stub
@@ -34,6 +36,7 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TxnDtls> getTxnDtlsbytxntyp(String acntid,String txntyp) {
 		// TODO Auto-generated method stub
@@ -43,6 +46,7 @@ public class TxnDtlsDaoImpl extends AbstractDao<TxnDtls> implements TxnDtlsDao {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TxnDtls> getTxnDtlsbyAtmNm(String atmName, String txntyp) {
 		// TODO Auto-generated method stub

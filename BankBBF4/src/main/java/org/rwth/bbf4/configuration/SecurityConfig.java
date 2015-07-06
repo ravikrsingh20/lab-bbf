@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.authorizeRequests().antMatchers("/emp/**").hasAnyAuthority("EMPL","ADMN")
 		.antMatchers("/onln/**").hasAuthority("CUST")
-		.antMatchers("/","/atmbank/**","/login/**","/logout/**","/register/**","/resources/**","/validate/**").permitAll()
+		.antMatchers("/","/atmbank/**","/login/**","/logout/**","/register/**","/resources/**","/validate/**","/error").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.formLogin().loginPage("/login").successHandler(successHandler).failureUrl("/login?error").permitAll()

@@ -1,6 +1,5 @@
 package org.rwth.bbf4.model;
 
-import java.sql.Timestamp;
 
 public class JsonTxnDtls  {
 	

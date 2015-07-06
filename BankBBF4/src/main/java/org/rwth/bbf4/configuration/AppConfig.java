@@ -2,7 +2,6 @@ package org.rwth.bbf4.configuration;
 
 import java.util.Properties;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -45,8 +44,6 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	@Bean(name = "dataSource")
 	public DriverManagerDataSource dataSource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-
-		BasicDataSource ds = new BasicDataSource();
 		driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/bank4_db");
 		driverManagerDataSource.setUsername("bbf4dba");

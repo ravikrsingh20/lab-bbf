@@ -40,7 +40,6 @@ public class RestServiceImpl implements RestService {
 		// TODO Auto-generated method stub
 		UserAccount ua  ;
 		TxnDtls txnDtls = new TxnDtls();
-		CashDetails cashDetails = new CashDetails();
 		java.util.Date date= new java.util.Date();
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
@@ -138,8 +137,6 @@ public class RestServiceImpl implements RestService {
 		UserAccount ua  ;
 		UserAccount useraccount = new UserAccount () ;
 		JsonTxnDtls jsontxnDtls = new JsonTxnDtls();
-		CashDetails cashDetails = new CashDetails();
-		java.util.Date date= new java.util.Date();
 		useraccount.setAcntid(user.getCardNumber());
 		//write code to check acnt id. also note that useraccount.fname has bankname and lname has atmname
 		// amount to be withdrawn will be in amt field
@@ -248,7 +245,6 @@ public class RestServiceImpl implements RestService {
 
 		// TODO Auto-generated method stub
 		UserAccount uasrc = new UserAccount();
-		UserAccount uadest = new UserAccount();
 		java.util.Date date= new java.util.Date();
 		TxnDtls txnDtlstmpsrc = new TxnDtls();
 		TxnDtls txnDtlstmpdest = new TxnDtls();
@@ -309,7 +305,6 @@ public class RestServiceImpl implements RestService {
 		java.util.Date date= new java.util.Date();
 		TxnDtls txnDtlstmpsrc = new TxnDtls();
 		TxnDtls txnDtlstmpdest = new TxnDtls();
-		CashDetails cashDetails = new CashDetails();
 		CashDetails cdDest = new CashDetails();
 		CashDetails cdSrc = new CashDetails();
 		//get our bank account
