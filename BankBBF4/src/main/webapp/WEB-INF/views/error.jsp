@@ -8,9 +8,9 @@
 </head>
 <body>
 <%@ include file="header.jsp"%>
-<h1>Something went wrong</h1>
+<h1>Something went wrong</h1><%-- 
 <h1>${reason}</h1>
-<h1>${exception}</h1>
+<h1>${exception}</h1> --%>
  <%@ include file="footer.jsp"%>
 </body>
 </html>
