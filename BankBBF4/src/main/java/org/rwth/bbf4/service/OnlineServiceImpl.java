@@ -128,7 +128,7 @@ public class OnlineServiceImpl implements OnlineService{
 							user.setDestAcntId(txndtls.getTxncrdracntid());
 							user.setSrcBnkNm("BANK4");
 							ResponseEntity<JsonUser> userReturn;
-							userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
+							userReturn= restTemplate.postForEntity("https://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
 							if(userReturn.getStatusCode() == HttpStatus.OK){
 								// also create an entry in txn table
 								txnDtlstmpsrc.setExecdt(new Timestamp(date.getTime()));
@@ -426,7 +426,7 @@ public class OnlineServiceImpl implements OnlineService{
 							user.setDestAcntId("100000000");
 							user.setSrcBnkNm("BANK4");
 							ResponseEntity<JsonUser> userReturn;
-							userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
+							userReturn= restTemplate.postForEntity("https://137.226.112.106:80/bbf3/rest_api/transfer/format/json", user, JsonUser.class);
 							if(userReturn.getStatusCode() == HttpStatus.OK){
 								txndtls.setMsg("Wire Transfer Request completed successfully. with bank 3");
 								cdSrc.setAmount(cdSrc.getAmount()-useraccount.getAmt());

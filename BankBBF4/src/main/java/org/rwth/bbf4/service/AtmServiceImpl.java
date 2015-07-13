@@ -127,7 +127,7 @@ public class AtmServiceImpl implements AtmService {
 				//JsonUser userReturn = new JsonUser();
 				try{
 					ResponseEntity<JsonUser> userReturn;
-					userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/cash/format/json", user, JsonUser.class);
+					userReturn= restTemplate.postForEntity("https://137.226.112.106:80/bbf3/rest_api/cash/format/json", user, JsonUser.class);
 					if(userReturn.getStatusCode() == HttpStatus.OK){
 						// everything is ok
 						// also create an entry in txn table					
@@ -301,7 +301,7 @@ public class AtmServiceImpl implements AtmService {
 		}else if (useraccount.getBnkname().equalsIgnoreCase("BANK3")){
 			// call web service of other bank to facilitate cash withdrawl of foreign bank atms		
 			try{
-				ResponseEntity<List> jsonTxnDtls = restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/trans/format/json", user,List.class);
+				ResponseEntity<List> jsonTxnDtls = restTemplate.postForEntity("https://137.226.112.106:80/bbf3/rest_api/trans/format/json", user,List.class);
 				List<Map<String, String>> jsonRetlist= jsonTxnDtls.getBody();
 				if(jsonTxnDtls.getStatusCode() == HttpStatus.OK){
 					//List  jsonlist = jsonTxnDtls.getBody();
@@ -385,7 +385,7 @@ public class AtmServiceImpl implements AtmService {
 			user.setPin(useraccount.getAtmpin());
 			try{
 				ResponseEntity<JsonUser> userReturn;
-				userReturn= restTemplate.postForEntity("http://137.226.112.106:80/bbf3/rest_api/bal/format/json", user, JsonUser.class);
+				userReturn= restTemplate.postForEntity("https://137.226.112.106:80/bbf3/rest_api/bal/format/json", user, JsonUser.class);
 				if(userReturn.getStatusCode() == HttpStatus.OK){
 					useraccount.setMsg("Balance for Account No. "+useraccount.getAcntid()+" is "+userReturn.getBody().getAmount());
 				}else if (userReturn.getStatusCode() == HttpStatus.UNAUTHORIZED){ //401 invalid pin
